@@ -1,0 +1,15 @@
+apt_install='apt-get install -y -o APT::Install-Recommends=false -o APT::Install-Suggests=false '
+export DEBIAN_FRONTEND=noninteractive
+ruby_install_dir=/usr/local/software/ruby
+OPENSSL_VERSION=openssl-1.1.1
+sharelib_install_dir=/usr/local/software/sharelib
+ssl_install_dir=/usr/local/software/ssl
+
+ruby_major=2.6
+ruby_version=2.6.4
+ruby_download_sha256=df593cd4c017de19adf5d0154b8391bb057cef1b72ecdd4a8ee30d3235c65f09
+rubygems_version=3.0.6
+bundler_version=2.0.2
+# https://github.com/bundler/bundler/releases
+jemalloc_version=5.2.1
+debug=true

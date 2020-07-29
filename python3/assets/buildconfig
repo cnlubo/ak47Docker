@@ -1,0 +1,13 @@
+apt_install='apt-get install -y --no-install-recommends '
+export DEBIAN_FRONTEND=noninteractive
+python3_version=3.8.0
+python2_version=2.7.16
+python2_install_dir=/usr/local/software/python2
+python3_install_dir=/usr/local/software/python3
+# Set 1 to disable
+export disable_python2=${disable_python2:-1}
+export disable_python3=${disable_python3:-0}
+ssl_install_dir=/usr/local/software/ssl
+sharelib_install_dir=/usr/local/software/sharelib
+build_src=/opt/src
+debug=true

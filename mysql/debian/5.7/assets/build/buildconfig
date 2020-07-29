@@ -1,0 +1,8 @@
+apt_install='apt-get install -y -o APT::Install-Recommends=false -o APT::Install-Suggests=false '
+export DEBIAN_FRONTEND=noninteractive
+
+mysql_user=mysql
+debug=true
+mysql_major=5.7
+# mysql_version=5.7.28
+mysql_version=5.7.28-1debian9
