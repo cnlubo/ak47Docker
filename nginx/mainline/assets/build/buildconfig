@@ -1,0 +1,112 @@
+apt_install='apt-get install -y --no-install-recommends '
+export DEBIAN_FRONTEND=noninteractive
+
+# Set 1 to you want to disable
+export disable_syslog=${disable_syslog:-0}
+export disable_cron=${disable_cron:-0}
+export without_pagespeed=${without_pagespeed:-1}
+export without_lua=${without_lua:-1}
+python3_install_dir=/usr/local/software/python3
+sharelib_install_dir=/usr/local/software/sharelib
+nginx_version=1.17.4
+##############################################################################
+# build dependency
+##############################################################################
+# use Cloudflare optimised zlib 
+# fork https://blog.cloudflare.com/cloudflare-fights-cancer/
+cloudflare_zlib='y'                  
+# CLOUDFLARE_ZLIB_DYNAMIC='y'          # compile nginx CF zlib as a dynamically instead of statically
+# CLOUDFLARE_ZLIB_OPENSSL='n'          # compile dynamically custom OpenSSL against Cloudflare zlib library
+# CLOUDFLARE_ZLIBRESET='y'             # if CLOUDFLARE_ZLIB='n' set, then revert gzip compression level from 9 to 5 automatically
+# CLOUDFLARE_ZLIBRAUTOMAX='n'          # don't auto raise nginx gzip compression level to 9 if using Cloudflare zlib
+# CLOUDFLARE_ZLIBPHP='n'               # use Cloudflare optimised zlib fork for PHP-FPM zlib instead of system zlib
+# CLOUDFLARE_ZLIBDEBUG='n'             # make install debug verbose mode
+# CLOUDFLARE_ZLIBVER='1.3.0'
+zlibcf_install_dir=/usr/local/software/zlibcf
+# LibreSSL
+# Set y to overrides OpenSSL as the default static compiled option for Nginx server
+libressl_switch='n'
+libressl_version='2.9.2' # Use this version of LibreSSL http://www.libressl.org/
+
+# BoringSSL
+# Set y to overrides OpenSSL as the default static compiled option for Nginx server
+boringssl_switch='y'
+# boringssl_shared='y'       # build boringssl as shared library so nginx can dynamically compile boringssl
+# BORINGSSL_DIR="/opt"
+
+
+openssl_version=1.1.1d
+pcre_version=8.43
+luajit_version=2.1
+pagespeed_version=1.13.35.2-stable
+psol_version=1.13.35.2
+
+
+jemalloc_version=5.2.1
+build_src=/assets/build/src
+debug=true
+
+
+# modsecurity module support 
+# https://github.com/SpiderLabs/ModSecurity/wiki/Reference-Manual#Installation_for_NGINX
+nginx_modsecurity='n'
+# modsecurity built with libmaxminddb is failing to compile so disable it in favour of GeoIP legacy
+nginx_modsecurity_maxmind='y'
+
+# 64bit OS only for Nginx compiled against zlib-ng 
+# https://github.com/Dead2/zlib-ng
+nginx_zlibng='n'
+
+# Choose whether to compile Nginx --with-google_perftools_module
+gperftools='y'
+# set larger page size for tcmalloc --with-tcmalloc-pagesize=32
+gperftools_tmalloclargepages='y'
+# https://bigsearcher.com/mirrors/nongnu/libunwind/
+libunwind_version='1.3.1'
+# Use this version of google-perftools
+# https://github.com/gperftools/gperftools
+gperftools_version='2.7'
+
+# Nginx configured with pcre & pcre-jit support
+nginx_pcrejit='y'
+# compile nginx pcre as dynamic instead of static library
+nginx_pcre_dynamic='y'
+# nginScript 
+# https://www.nginx.com/blog/launching-nginscript-and-looking-ahead/
+NGINX_NJS='n'
+
+# Nginx GEOIP module install
+NGINX_GEOIP='y'
+# Nginx caches GEOIP databases in memory (default), setting 'n' caches to disk instead
+NGINX_GEOIPMEM='y'
+# https://github.com/leev/ngx_http_geoip2_module
+NGINX_GEOIPTWOLITE='n'
+
+# for Nginx compile i.e. passing ld.gold linker -fuse-ld=bfd or -fuse-ld=gold 
+# https://community.centminmod.com/posts/44037/
+GX_LDGOLD='y'
+# enable -ffat-lto-objects flag for nginx builds - much slower compile times
+NGINX_FATLTO_OBJECTS='n'
+# enable -fno-fat-lto-objects flag for nginx builds - much slower compile times
+NGINX_NOFATLTO_OBJECTS='n'
+# recommended to keep NGINXOPENSSL_FATLTO_OBJECTS and NGINXOPENSSL_NOFATLTO_OBJECTS set to = n
+# enable -ffat-lto-objects flag for nginx OpenSSL builds - much slower compile times
+NGINXOPENSSL_FATLTO_OBJECTS='n'
+# enable -fno-fat-lto-objects flag for nginx OpenSSL builds - much slower compile times
+NGINXOPENSSL_NOFATLTO_OBJECTS='n'
+# whether or not nginx is compiled with -Wformat -Werror=format-security flags
+NGINXCOMPILE_FORMATSEC='y'
+
+# Clang & GCC Compilers
+# MARCH_TARGETNATIVE='y'        # for intel 64bit only set march=native, if no set to x86-64
+# MARCH_TARGETNATIVE_ALWAYS='n' # force native compiler to override smarter vps detection routine
+CLANG='y'                     # Nginx and LibreSSL
+# build nginx with Position-independent code (PIC) / Position-indendendent executables (PIEs)
+NGINXCOMPILE_PIE='n'
+# Install Phusion Passenger requires installing addons/passenger.sh before hand
+NGINX_PASSENGER='n'
+# whether or not nginx is compiled with -Wformat -Werror=format-security flags
+NGINXCOMPILE_FORMATSEC='y'
+
+
+

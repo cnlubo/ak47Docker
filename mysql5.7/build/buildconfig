@@ -1,0 +1,7 @@
+yum_install='yum install -y --setopt=tsflags=nodocs'
+boost_major_version=1.59.0
+boost_version=1_59_0
+jemalloc_version=5.1.0
+mysql_5_7_version=5.7.22
+mysql_user=mysql
+MysqlPort=3306

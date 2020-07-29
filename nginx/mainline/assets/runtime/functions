@@ -1,0 +1,15 @@
+#!/bin/bash
+### 
+# @Author: cnak47
+ # @Date: 2019-09-16 21:59:56
+ # @LastEditors: cnak47
+ # @LastEditTime: 2019-09-18 17:19:25
+ # @Description: 
+ ###
+
+# shellcheck disable=SC2034
+set -e
+# shellcheck disable=SC1091
+source /opt/ak47/base/liblog.sh
+# shellcheck disable=SC1091
+source /assets/runtime/env-defaults
