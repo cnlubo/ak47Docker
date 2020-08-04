@@ -2,8 +2,8 @@
 ###
 # @Author: cnak47
 # @Date: 2018-11-23 11:32:38
- # @LastEditors: cnak47
- # @LastEditTime: 2019-09-25 14:35:25
+# @LastEditors: cnak47
+# @LastEditTime: 2020-08-01 12:22:25
 # @Description:
 ###
 
@@ -30,21 +30,22 @@ savedAptMark="$(apt-mark showmanual)" &&
     ${apt_install:?} $BuildDeps
 
 mkdir -p "${build_src:?}"
-# zlib
-src_url=http://zlib.net/zlib-${zlib_version:?}.tar.gz
-download_and_extract "$src_url" "$build_src/zlib-${zlib_version:?}" "$build_src"
-cd "$build_src"/zlib-"${zlib_version:?}"
-./configure --prefix="${sharelib_dir:?}" -shared
-make && make install
-if [ -f "${sharelib_dir:?}"/lib/libz.a ]; then
-    info "[zlib-${zlib_version:?} installed successful !!!]"
-    [ -f /etc/ld.so.conf.d/sharelib.conf ] && rm -rf /etc/ld.so.conf.d/sharelib.conf
-    echo "${sharelib_dir:?}/lib" >/etc/ld.so.conf.d/sharelib.conf
-    ldconfig
-else
-    error "[install zlib-${zlib_version:?} failed !!!]"
-fi
+#
 if [ "${ssl_version:?}" -eq 0 ]; then
+    # zlib
+    src_url=http://zlib.net/zlib-${zlib_version:?}.tar.gz
+    download_and_extract "$src_url" "$build_src/zlib-${zlib_version:?}" "$build_src"
+    cd "$build_src"/zlib-"${zlib_version:?}"
+    ./configure --prefix="${sharelib_dir:?}" -shared
+    make && make install
+    if [ -f "${sharelib_dir:?}"/lib/libz.a ]; then
+        info "[zlib-${zlib_version:?} installed successful !!!]"
+        [ -f /etc/ld.so.conf.d/sharelib.conf ] && rm -rf /etc/ld.so.conf.d/sharelib.conf
+        echo "${sharelib_dir:?}/lib" >/etc/ld.so.conf.d/sharelib.conf
+        ldconfig
+    else
+        error "[install zlib-${zlib_version:?} failed !!!]"
+    fi
     ##############################################################################
     # openssl
     # https://www.openssl.org/
