@@ -2,8 +2,8 @@
 ###
 # @Author: cnak47
 # @Date: 2019-09-14 10:41:21
- # @LastEditors: cnak47
- # @LastEditTime: 2019-09-25 11:18:50
+# @LastEditors: cnak47
+# @LastEditTime: 2020-08-02 08:33:56
 # @Description:
 ###
 
@@ -17,6 +17,7 @@ mkdir -p /usr/local/software/
 # chmod +x /usr/local/software/tools/*
 # ln -s -t /usr/local/bin /usr/local/software/tools/*
 
+# https://github.com/docker/docker/blob/9a9fc01af8fb5d98b8eec0740716226fadb3735c/contrib/mkimage/debootstrap#L71-L78
 # Temporarily disable dpkg fsync to make building faster.
 if [[ ! -e /etc/dpkg/dpkg.cfg.d/docker-apt-speedup ]]; then
     echo force-unsafe-io >/etc/dpkg/dpkg.cfg.d/docker-apt-speedup
@@ -70,15 +71,15 @@ echo ">>>> Removing init system"
 echo ">>>> Removing  unused packages"
 
 # dpkg --get-selections | grep -v deinstall
-echo "Yes, do as I say!" | apt-get purge \
-    libncursesw5 \
-    libsmartcols1 \
-    ncurses-base \
-    ncurses-bin \
-    tzdata \
-    libsystemd0 \
-    libmount1 \
-    libudev1
+# echo "Yes, do as I say!" | apt-get purge \
+#      libncursesw6\
+#     libsmartcols1 \
+#     ncurses-base \
+#     ncurses-bin \
+#     tzdata \
+#     libsystemd0 \
+#     libmount1 \
+#     libudev1
 
 # cleanup
 (

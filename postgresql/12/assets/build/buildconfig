@@ -1,5 +1,4 @@
 apt_install='apt-get install -y -o APT::Install-Recommends=false -o APT::Install-Suggests=false '
 export DEBIAN_FRONTEND=noninteractive
-
 debug=true
-# pg_deb_version=10.6-1.pgdg90+1
+

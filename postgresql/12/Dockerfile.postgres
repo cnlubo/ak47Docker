@@ -19,6 +19,8 @@ ENV PG_BINDIR=/usr/lib/postgresql/${PG_VERSION}/bin \
     PATH=/usr/lib/postgresql/$PG_VERSION/bin:$PATH \
     LANG="en_US.UTF-8"
 
+# add source
+COPY debian.list /etc/apt/sources.list
 
 COPY assets/ /
 RUN chmod +x /build/*.sh && \

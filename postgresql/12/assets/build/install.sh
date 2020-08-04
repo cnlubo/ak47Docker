@@ -2,8 +2,8 @@
 ###
 # @Author: cnak47
 # @Date: 2019-11-03 21:29:23
- # @LastEditors: cnak47
- # @LastEditTime: 2019-11-05 22:06:29
+# @LastEditors: cnak47
+# @LastEditTime: 2020-08-02 18:34:01
 # @Description:
 ###
 
@@ -28,7 +28,7 @@ fi
 # shellcheck disable=SC2086
 savedAptMark="$(apt-mark showmanual)" &&
     ${apt_install:?} $BuildDeps
-
+apt-mark auto '.*' >/dev/null
 #############################################################################
 # postgresql install
 #############################################################################
@@ -48,7 +48,8 @@ savedAptMark="$(apt-mark showmanual)" &&
 # import GPG key used for signing packages
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 # add PostgreSQL repository
-echo "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main $PG_VERSION" | tee /etc/apt/sources.list.d/pgdg.list
+echo "deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main $PG_VERSION" | tee /etc/apt/sources.list.d/pgdg.list
+
 apt update && ${apt_install:?} postgresql-common
 sed -ri 's/#(create_main_cluster) .*$/\1 = false/' /etc/postgresql-common/createcluster.conf
 ${apt_install:?} postgresql-"$PG_VERSION"
@@ -84,7 +85,6 @@ ln -s /usr/local/bin/entrypoint.sh / # backwards compat
 # mkdir /docker-entrypoint-initdb.d
 # cp /build/scripts/*.sh /docker-entrypoint-initdb.d
 
-apt-mark auto '.*' >/dev/null
 find /usr/local -type f -executable -not \( -name '*tkinter*' \) -exec ldd '{}' ';' |
     awk '/=>/ { print $(NF-1) }' |
     sort -u |
@@ -94,5 +94,4 @@ find /usr/local -type f -executable -not \( -name '*tkinter*' \) -exec ldd '{}' 
     xargs -r apt-mark manual
 # shellcheck disable=SC2086
 [ -z "${savedAptMark:?}" ] || apt-mark manual $savedAptMark
-
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false

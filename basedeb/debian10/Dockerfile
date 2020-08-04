@@ -1,9 +1,15 @@
 ############################################
 # name : cnlubo/basedeb
 ############################################
-FROM debian:9.11-slim
+ARG from_img_name="debian"
+ARG from_img_tag="10.4-slim"
+ARG from_img_hash=""
+FROM ${from_img_name}:${from_img_tag}${docker_img_hash}
+
+ARG debian_version="10.4"
 LABEL maintainer="bolu20080314@gmail.com" \
-    provider="cnak47"
+    provider="cnak47" \
+    version=${debian_version}
 # add source
 COPY debian.list /etc/apt/sources.list
 
@@ -21,4 +27,4 @@ RUN chmod +x /assets/build/*.sh && \
 ENV ENV LD_LIBRARY_PATH=/usr/local/software/sharelib/lib:/usr/local/software/ssl/lib:$LD_LIBRARY_PATH
 
 ENTRYPOINT ["entrypoint.sh"]
-CMD ["/usr/local/bin/zsh"]
+CMD ["/bin/bash"]
