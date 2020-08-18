@@ -2,13 +2,6 @@
 Author: cnak47
 Date: 2020-08-02 21:06:44
 LastEditors: cnak47
-LastEditTime: 2020-08-02 21:45:14
-Description: 
--->
-<!--
-Author: cnak47
-Date: 2020-08-02 21:06:44
-LastEditors: cnak47
 LastEditTime: 2020-08-02 21:06:45
 Description: 
 -->
@@ -35,5 +28,6 @@ docker run --name=redmine -d \
 #Point your browser to http://localhost:10083 and login using the default username and password:
 # username: admin
 # password: admin
+# plugin 
 
 ```
