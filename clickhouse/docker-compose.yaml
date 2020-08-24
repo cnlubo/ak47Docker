@@ -14,7 +14,6 @@ services:
     volumes:
       - /Users/ak47/Documents/docker/clickhouse/conf/config.xml:/etc/clickhouse-server/config.xml
       - /Users/ak47/Documents/docker/clickhouse/conf/config.d/docker_related_config.xml:/etc/clickhouse-server/config.d/docker_related_config.xml
-      
       - /Users/ak47/Documents/docker/clickhouse/conf/users.xml:/etc/clickhouse-server/users.xml
       - /Users/ak47/Documents/docker/clickhouse/data:/var/lib/clickhouse
       - /Users/ak47/Documents/docker/clickhouse/log/clickhouse-server.log:/var/log/clickhouse-server/clickhouse-server.log

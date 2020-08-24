@@ -2,7 +2,7 @@
 Author: cnak47
 Date: 2020-08-14 14:48:00
  * @LastEditors: cnak47
- * @LastEditTime: 2020-08-19 19:42:30
+ * @LastEditTime: 2020-08-20 14:49:43
 Description: 
 -->
 
@@ -53,7 +53,7 @@ localhost 8123 root/p8a2csYK default/CVWPdiHF
 
 docker run -it --rm --net clickhouse_default --link clickhouse-server yandex/clickhouse-client:20.6.3.28 --host clickhouse-server --user root --password p8a2csYK
 
-docker run -it --rm --net clickhouse_default yandex/clickhouse-client:20.6.3.28 --host clickhouse-server --user root --password p8a2csYK
+docker run -it --rm --net clickhouse_default yandex/clickhouse-client:20.6.3.28 --host clickhouse-server --user root --password p8a2csYK --query "show databases"
 
 
 ```
