@@ -1,8 +1,13 @@
 <!--
 Author: cnak47
 Date: 2020-08-14 14:48:00
+<<<<<<< HEAD
 LastEditors: cnak47
-LastEditTime: 2020-08-23 10:31:35
+LastEditTime: 2020-08-24 19:41:33
+=======
+ * @LastEditors: cnak47
+ * @LastEditTime: 2020-08-24 10:27:34
+>>>>>>> 509a3306943234e2e35b3289ece7307adadeac76
 Description: 
 -->
 
@@ -27,10 +32,11 @@ docker pull yandex/clickhouse-server:20.6.3.28
 docker run --rm -d --name=clickhouse-server \
 --ulimit nofile=262144:262144 \
 -p 8123:8123 -p 9009:9009 -p 9090:9000 \
-yandex/clickhouse-server:20.6.3.28
+yandex/clickhouse-server:20.6.4.44
 # 复制临时容器内配置文件到宿主机
 docker cp clickhouse-server:/etc/clickhouse-server/config.xml /Users/ak47/Documents/docker/clickhouse/conf/config.xml
 docker cp clickhouse-server:/etc/clickhouse-server/users.xml /Users/ak47/Documents/docker/clickhouse/conf/users.xml
+docker cp clickhouse-server:/etc/clickhouse-server/config.d/docker_related_config.xml D:\workspace\data\ch-server\ch1\conf\
 # 停掉临时容器
 docker stop clickhouse-server
 # 创建default账号密码
@@ -71,8 +77,5 @@ sudo wget https://repo.yandex.ru/clickhouse/rpm/stable/x86_64/clickhouse-client-
 sudo wget https://repo.yandex.ru/clickhouse/rpm/stable/x86_64/clickhouse-common-static-20.6.4.44-2.x86_64.rpm
 # 安装
 sudo rpm -ivh *.rpm
-
-
-
 
 ```
