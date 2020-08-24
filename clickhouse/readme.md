@@ -2,7 +2,7 @@
 Author: cnak47
 Date: 2020-08-14 14:48:00
  * @LastEditors: cnak47
- * @LastEditTime: 2020-08-20 14:49:43
+ * @LastEditTime: 2020-08-24 10:27:34
 Description: 
 -->
 
@@ -25,10 +25,11 @@ docker pull yandex/clickhouse-server:20.6.3.28
 docker run --rm -d --name=clickhouse-server \
 --ulimit nofile=262144:262144 \
 -p 8123:8123 -p 9009:9009 -p 9090:9000 \
-yandex/clickhouse-server:20.6.3.28
+yandex/clickhouse-server:20.6.4.44
 # 复制临时容器内配置文件到宿主机
 docker cp clickhouse-server:/etc/clickhouse-server/config.xml /Users/ak47/Documents/docker/clickhouse/conf/config.xml
 docker cp clickhouse-server:/etc/clickhouse-server/users.xml /Users/ak47/Documents/docker/clickhouse/conf/users.xml
+docker cp clickhouse-server:/etc/clickhouse-server/config.d/docker_related_config.xml D:\workspace\data\ch-server\ch1\conf\
 # 停掉临时容器
 docker stop clickhouse-server
 # 创建default账号密码
