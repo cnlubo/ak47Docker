@@ -1,14 +1,16 @@
 <!--
 Author: cnak47
 Date: 2020-08-14 14:48:00
- * @LastEditors: cnak47
- * @LastEditTime: 2020-08-19 19:42:30
+LastEditors: cnak47
+LastEditTime: 2020-08-23 10:31:35
 Description: 
 -->
 
 # clickhouse
 
 ## 安装
+
+### docker 单机
 
 ```bash
 mkdir -p /Users/ak47/Documents/docker/clickhouse/data
@@ -53,7 +55,24 @@ localhost 8123 root/p8a2csYK default/CVWPdiHF
 
 docker run -it --rm --net clickhouse_default --link clickhouse-server yandex/clickhouse-client:20.6.3.28 --host clickhouse-server --user root --password p8a2csYK
 
-docker run -it --rm --net clickhouse_default yandex/clickhouse-client:20.6.3.28 --host clickhouse-server --user root --password p8a2csYK
+docker run -it --rm --net clickhouse_default yandex/clickhouse-client:20.6.3.28 --host clickhouse-server --user root --password p8a2csYK --multiline
+
+```
+
+### centos7
+
+```bash
+# centos7
+#查看cpu是否支持sse4
+grep -q sse4_2 /proc/cpuinfo && echo "SSE 4.2 supported" || echo "SSE 4.2 not supported"
+# 下载rpm 包
+sudo wget https://repo.yandex.ru/clickhouse/rpm/stable/x86_64/clickhouse-server-20.6.4.44-2.noarch.rpm
+sudo wget https://repo.yandex.ru/clickhouse/rpm/stable/x86_64/clickhouse-client-20.6.4.44-2.noarch.rpm
+sudo wget https://repo.yandex.ru/clickhouse/rpm/stable/x86_64/clickhouse-common-static-20.6.4.44-2.x86_64.rpm
+# 安装
+sudo rpm -ivh *.rpm
+
+
 
 
 ```
