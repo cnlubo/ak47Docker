@@ -2,8 +2,8 @@
 Author: cnak47
 Date: 2020-08-14 14:48:00
 <<<<<<< HEAD
-LastEditors: cnak47
-LastEditTime: 2020-08-24 19:41:33
+ * @LastEditors: cnak47
+ * @LastEditTime: 2020-08-25 19:50:20
 =======
  * @LastEditors: cnak47
  * @LastEditTime: 2020-08-24 10:27:34
@@ -77,5 +77,43 @@ sudo wget https://repo.yandex.ru/clickhouse/rpm/stable/x86_64/clickhouse-client-
 sudo wget https://repo.yandex.ru/clickhouse/rpm/stable/x86_64/clickhouse-common-static-20.6.4.44-2.x86_64.rpm
 # 安装
 sudo rpm -ivh *.rpm
+
+```
+
+### 分片表
+
+从实体表层面来看，一张分片表由两部分组成：
+
+- 本地表：通常以_local为后缀进行命名。本地表是承接数据的载体，可以使用非Distributed的任意表引擎，一张本地表对应了一个数据分片。
+- 分布式表：通常以_all为后缀进行命名。分布式表只能使用Distributed表引擎，它与本地表形成一对多的映射关系，日后将通过分布式表代理操作多张本地表。要彻底删除一张分布式表，则需要分别删除分布式表和本地表
+
+```bash
+# 分布式DDL
+# 查询宏变量
+SELECT * FROM system.macros m
+
+SELECT * FROM system.zookeeper where path = '/clickhouse/task_queue/ddl';
+SELECT * FROM system.zookeeper where path = '/clickhouse/task_queue/ddl/query-0000000005/finished';
+# 查询远程
+select * from remote('ch-server-12:9000','system','macros','root','p8a2csYK')
+# 创建数据库
+create database dm on cluster chk_shard2_rep0
+# 创建表
+create table dm.test_1_local on cluster chk_shard2_rep0 (
+id UInt64
+) engine = ReplicatedMergeTree('/clickhouse/tables/{shard}/test_1','{replica}')
+order by id
+# del 表
+drop table dm.test_1_local on cluster chk_shard2_rep0
+
+# 创建分布式表
+CREATE TABLE dm.test_shard_2_all ON CLUSTER chk_shard2_rep0 (
+    id UInt64
+) ENGINE = Distributed(chk_shard2_rep0,dm,test_shard_2_local,intHash64(id));
+
+create table dm.test_shard_2_local on cluster chk_shard2_rep0 (
+id UInt64
+) engine = MergeTree()
+order by id
 
 ```
