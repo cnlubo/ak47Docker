@@ -91,7 +91,6 @@ sudo rpm -ivh *.rpm
 # 分布式DDL
 # 查询宏变量
 SELECT * FROM system.macros m
-
 SELECT * FROM system.zookeeper where path = '/clickhouse/task_queue/ddl';
 SELECT * FROM system.zookeeper where path = '/clickhouse/task_queue/ddl/query-0000000005/finished';
 # 查询远程

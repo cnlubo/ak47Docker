@@ -2,11 +2,10 @@
 # name : cnlubo/basedeb
 ############################################
 ARG from_img_name="debian"
-ARG from_img_tag="10.4-slim"
+ARG from_img_tag="10.5-slim"
 ARG from_img_hash=""
 FROM ${from_img_name}:${from_img_tag}${docker_img_hash}
-
-ARG debian_version="10.4"
+ARG debian_version="10.5"
 LABEL maintainer="bolu20080314@gmail.com" \
     provider="cnak47" \
     version=${debian_version}

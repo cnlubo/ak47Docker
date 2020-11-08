@@ -3,7 +3,7 @@
 # @Author: cnak47
 # @Date: 2018-11-23 11:32:38
 # @LastEditors: cnak47
-# @LastEditTime: 2020-08-01 12:22:25
+# @LastEditTime: 2020-10-07 18:21:12
 # @Description:
 ###
 
@@ -15,13 +15,13 @@ source opt/ak47/base/libbase.sh
 source /opt/ak47/base/libvalidations.sh
 [[ ${debug:?} == true ]] && set -x
 
-BaseDeps='less netbase procps tree sudo '
+BaseDeps='less netbase procps tree sudo net-tools curl'
 apt-get update
 if [ -n "$BaseDeps" ]; then
     # shellcheck disable=SC2086
     ${apt_install:?} $BaseDeps
 fi
-BuildDeps='autoconf automake apt-transport-https ca-certificates bzip2 git-core xz-utils gcc g++ make libtool patch wget curl libperl-dev '
+BuildDeps='autoconf automake apt-transport-https ca-certificates bzip2 git-core xz-utils gcc g++ make libtool patch wget libperl-dev '
 if ! command -v gpg >/dev/null; then
     BuildDeps=${BuildDeps}'gnupg dirmngr '
 fi
@@ -77,6 +77,7 @@ if [ "${ssl_version:?}" -eq 0 ]; then
     ln -s -t /usr/local/bin "${ssl_install_dir:?}"/bin/*
 # test tls1_3
 # openssl ciphers -v | awk '{print $2}' | sort | uniq
+# apt-get update
 # apt-get install bsdmainutils
 # openssl ciphers -V tls1_3 | column -t
 # openssl ciphers -s -tls1_3
@@ -150,6 +151,20 @@ if [ "${disable_zsh:?}" -eq 0 ]; then
     chmod +x /assets/tools/zsh/zsh.sh
     /assets/tools/zsh/zsh.sh || true
 fi
+
+##############################################################################
+# yq
+# https://github.com/mikefarah/yq
+# wait-for-port
+# https://github.com/bitnami/wait-for-port
+# render-template
+# https://github.com/bitnami/render-templat
+# ini-file
+# https://github.com/bitnami/ini-file
+##############################################################################
+
+wget -O /usr/local/bin/yq "https://github.com/mikefarah/yq/releases/download/${yq_version:?}/yq_linux_amd64" && chmod +x /usr/local/bin/yq
+
 
 apt-mark auto '.*' >/dev/null
 

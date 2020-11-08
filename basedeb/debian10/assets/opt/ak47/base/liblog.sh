@@ -1,6 +1,11 @@
 #!/bin/bash
 # shellcheck disable=SC2034
-
+# @Author: cnak47
+# @Date: 2020-06-16 14:22:08
+# @LastEditors: cnak47
+# @LastEditTime: 2020-10-07 18:36:47
+# @Description: 
+# #
 # Color Palette
 RESET='\033[0m'
 BOLD='\033[1m'
@@ -34,8 +39,6 @@ stderr_print() {
 
 log() {
 
-    #echo -e "${BLUE}(${MODULE}:${MAGENTA}$(date "+%Y-%m-%d %H:%M:%S"))${RESET} ${*}" >&2
-    #echo -e "(${MAGENTA}$(date "+%Y-%m-%d %H:%M:%S") ${BLUE}${MODULE}${RESET}) ${*}" >&2
     stderr_print "[${BLUE}${MODULE} ${MAGENTA}$(date "+%Y-%m-%d %H:%M:%S ")${RESET}] ${*}"
 
 }

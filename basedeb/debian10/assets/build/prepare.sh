@@ -3,7 +3,7 @@
 # @Author: cnak47
 # @Date: 2019-09-14 10:41:21
 # @LastEditors: cnak47
-# @LastEditTime: 2020-08-02 08:33:56
+# @LastEditTime: 2020-10-07 12:06:11
 # @Description:
 ###
 
@@ -12,7 +12,7 @@ set -e
 source /assets/buildconfig
 [[ ${debug:?} == true ]] && set -x
 mv /assets/opt/ak47 /opt/
-mkdir -p /usr/local/software/
+#mkdir -p /usr/local/software/
 # mv /assets/tools/tools /usr/local/software/
 # chmod +x /usr/local/software/tools/*
 # ln -s -t /usr/local/bin /usr/local/software/tools/*
