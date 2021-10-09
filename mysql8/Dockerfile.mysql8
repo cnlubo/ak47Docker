@@ -1,0 +1,22 @@
+FROM cnlubo/basedeb:v1.1
+LABEL maintainer="bolu20080314@gmail.com" \
+    provider="cnak47"
+
+ENV MySQL_USER=mysql \
+    MySQL_VERSION=8 \
+    MySQL_HOME=/var/lib/mysql8 \
+    MySQL_RUNDIR=/run/mysql8 \
+    MySQL_LOGDIR=/var/log/mysql8
+
+# ENV PG_BINDIR=/usr/lib/postgresql/${PG_VERSION}/bin \
+#     PG_DATADIR=${PG_HOME}/${PG_VERSION}/main \
+#     PATH=/usr/lib/postgresql/$PG_VERSION/bin:$PATH \
+#     LANG="en_US.UTF-8"
+# add source
+COPY debian.list /etc/apt/sources.list
+
+COPY assets/ /
+RUN chmod +x /build/*.sh && \
+    /build/prepare.sh && \
+    /build/install.sh && \
+    /build/cleanup.sh

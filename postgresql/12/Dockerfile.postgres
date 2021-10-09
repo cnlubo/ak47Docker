@@ -2,7 +2,7 @@
 # version : cnlubo/postgres
 ############################################
 
-FROM cnlubo/basedeb:v1.0
+FROM cnlubo/basedeb:v1.1
 LABEL maintainer="bolu20080314@gmail.com" \
     provider="cnak47"
 

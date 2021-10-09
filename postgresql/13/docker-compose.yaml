@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  postgresql13:
+    # 镜像名
+    image: cnlubo/postgresql:13 
+    # 容器名(以后的控制都通过这个)
+    container_name: postgresql13
+    # 重启策略
+    restart: always
+    environment:
+      PG_PASSWORD: 12345678
+      DB_EXTENSION: unaccent,pg_trgm
+      DB_USER: admin
+      DB_PASS: admin123
+      DB_NAME: test_db1,test_db2
+    # 映射端口
+    ports:
+       - 5432:5432
+    volumes:
+      # 数据挂载
+      - /Users/ak47/Documents/pgdata:/var/lib/postgresql

@@ -1,0 +1,17 @@
+version: '3'
+services:
+  jenkins:
+    image: jenkins/jenkins:latest
+    container_name: jenkins
+    restart: always
+    user: root                            
+    network_mode: "bridge"
+    ports:
+      - "18080:8080"
+      - "5000:5000"
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+    - /Users/ak47/Documents/dockerdata/jenkins/jenkins_home:/var/jenkins_home     
+    - /Users/ak47/Documents/dockerdata/jenkins/home:/home
+    - /var/run/docker.sock:/var/run/docker.sock
