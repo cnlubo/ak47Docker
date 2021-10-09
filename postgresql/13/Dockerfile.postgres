@@ -1,0 +1,32 @@
+############################################
+# version : cnlubo/postgres
+############################################
+
+FROM cnlubo/basedeb:v1.1.1
+LABEL maintainer="bolu20080314@gmail.com" \
+    provider="cnak47"
+
+ENV PG_APP_HOME="/etc/docker-postgresql" \
+    PG_VERSION=13 \
+    PG_USER=postgres \
+    PG_HOME=/var/lib/postgresql \
+    PG_RUNDIR=/run/postgresql \
+    PG_LOGDIR=/var/log/postgresql \
+    PG_CERTDIR=/etc/postgresql/certs
+
+ENV PG_BINDIR=/usr/lib/postgresql/${PG_VERSION}/bin \
+    PG_DATADIR=${PG_HOME}/${PG_VERSION}/main \
+    PATH=/usr/lib/postgresql/$PG_VERSION/bin:$PATH \
+    LANG="en_US.UTF-8"
+
+COPY assets/ /
+RUN chmod +x /build/*.sh && \
+    /build/prepare.sh && \
+    /build/install.sh && \
+    /build/cleanup.sh
+
+WORKDIR ${PG_HOME}
+
+ENTRYPOINT ["entrypoint.sh"]
+
+EXPOSE 5432/tcp

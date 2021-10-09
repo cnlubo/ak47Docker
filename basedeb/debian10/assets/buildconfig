@@ -1,18 +1,18 @@
 apt_install='apt-get install -y --no-install-recommends '
 export DEBIAN_FRONTEND=noninteractive
 TZ=Asia/Shanghai
-gosu_version=1.12
+gosu_version=1.14
 tini_version='0.19.0'
 zsh_version=5.8
-yq_version=3.4.0
+yq_version=4.13.0
 # Set 1 to disable
 export disable_zsh=${disable_zsh:-1}
 zlib_version=1.2.11
 sharelib_dir=/usr/local/software/sharelib
 # 0:openssl 1:libressl
 export ssl_version=${ssl_version:-0}
-openssl_version=1.1.1h
-libreSSL_version=3.2.1
+openssl_version=1.1.1l
+libreSSL_version=3.3.3
 ssl_install_dir=/usr/local/software/ssl
 build_src=/opt/src
 debug=true
