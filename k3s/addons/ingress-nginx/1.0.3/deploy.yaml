@@ -1,4 +1,3 @@
-
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -37,7 +36,7 @@ metadata:
   name: ingress-nginx-controller
   namespace: ingress-nginx
 data:
-  allow-snippet-annotations: 'true'
+  allow-snippet-annotations: "true"
 ---
 # Source: ingress-nginx/templates/clusterrole.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -52,7 +51,7 @@ metadata:
   name: ingress-nginx
 rules:
   - apiGroups:
-      - ''
+      - ""
     resources:
       - configmaps
       - endpoints
@@ -63,13 +62,13 @@ rules:
       - list
       - watch
   - apiGroups:
-      - ''
+      - ""
     resources:
       - nodes
     verbs:
       - get
   - apiGroups:
-      - ''
+      - ""
     resources:
       - services
     verbs:
@@ -85,7 +84,7 @@ rules:
       - list
       - watch
   - apiGroups:
-      - ''
+      - ""
     resources:
       - events
     verbs:
@@ -141,13 +140,13 @@ metadata:
   namespace: ingress-nginx
 rules:
   - apiGroups:
-      - ''
+      - ""
     resources:
       - namespaces
     verbs:
       - get
   - apiGroups:
-      - ''
+      - ""
     resources:
       - configmaps
       - pods
@@ -158,7 +157,7 @@ rules:
       - list
       - watch
   - apiGroups:
-      - ''
+      - ""
     resources:
       - services
     verbs:
@@ -188,7 +187,7 @@ rules:
       - list
       - watch
   - apiGroups:
-      - ''
+      - ""
     resources:
       - configmaps
     resourceNames:
@@ -197,13 +196,13 @@ rules:
       - get
       - update
   - apiGroups:
-      - ''
+      - ""
     resources:
       - configmaps
     verbs:
       - create
   - apiGroups:
-      - ''
+      - ""
     resources:
       - events
     verbs:
@@ -310,6 +309,7 @@ spec:
       app.kubernetes.io/component: controller
   revisionHistoryLimit: 10
   minReadySeconds: 0
+  replicas: 2
   template:
     metadata:
       labels:
@@ -317,6 +317,7 @@ spec:
         app.kubernetes.io/instance: ingress-nginx
         app.kubernetes.io/component: controller
     spec:
+      hostNetwork: true
       dnsPolicy: ClusterFirst
       containers:
         - name: controller
@@ -539,7 +540,7 @@ metadata:
     app.kubernetes.io/component: admission-webhook
 rules:
   - apiGroups:
-      - ''
+      - ""
     resources:
       - secrets
     verbs:

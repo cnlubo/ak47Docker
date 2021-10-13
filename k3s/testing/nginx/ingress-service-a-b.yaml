@@ -4,6 +4,7 @@ metadata:
   name: service-a-b
   annotations:
     ingressclass.kubernetes.io/is-default-class: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: "/"
 spec:
   ingressClassName: "nginx"
   rules:
@@ -15,5 +16,15 @@ spec:
             backend:
               service:
                 name: nginx-a
+                port:
+                  number: 80
+    - host: srvb.nginx.svc
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: nginx-b
                 port:
                   number: 80
