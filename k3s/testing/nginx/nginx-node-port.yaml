@@ -1,0 +1,67 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nginx-index-nodeport
+data:
+  index.html: |-
+    {"Das ist nginx-nodeport"}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-nodeport
+  namespace: default
+spec:
+  type: NodePort
+  # sessionAffinity: None
+  selector:
+    app: nginx-nodeport
+  ports:
+    - protocol: TCP
+      nodePort: 30123
+      port: 80
+      name: http
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-nodeport
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-nodeport
+  template:
+    metadata:
+      labels:
+        app: nginx-nodeport
+    spec:
+      containers:
+       - name: nginx-nodeport
+         image: nginx
+         imagePullPolicy: IfNotPresent
+         resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+         ports:
+           - containerPort: 80
+         livenessProbe:
+           httpGet:
+             path: /
+             port: http
+           initialDelaySeconds: 3
+           periodSeconds: 3
+         volumeMounts:
+           - mountPath: /usr/share/nginx/html
+             name: index-volume
+      volumes:
+        - name: index-volume
+          configMap:
+            name: nginx-index-nodeport
