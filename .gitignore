@@ -12,7 +12,7 @@
 *.out
 .vscode/
 .DS_Store
-k3s/hosts.backup
-k3s/hosts.local
-k3s/k3s.yaml
-k3s/k3s.yaml.back
+/k3s/hosts.backup
+/k3s/hosts.local
+/k3s/k3s.yaml
+/k3s/k3s.yaml.back
