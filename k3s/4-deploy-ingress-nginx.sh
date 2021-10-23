@@ -20,7 +20,6 @@ sleep 5
 # kubectl create ns ingress-nginx
 # 默认开启 hostNetwork
 kubectl create -f addons/ingress-nginx/1.0.3/deploy.yaml
-
 sleep 10
 POD_NAMESPACE=ingress-nginx
 POD_NAME=$(kubectl get pods -n $POD_NAMESPACE -l app.kubernetes.io/name=ingress-nginx --field-selector=status.phase=Running -o jsonpath='{.items[0].metadata.name}')
