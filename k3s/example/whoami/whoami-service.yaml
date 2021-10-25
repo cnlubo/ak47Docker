@@ -7,7 +7,8 @@ spec:
   selector:
     app: whoami
   type: ClusterIP
-  sessionAffinity: None
+  # sessionAffinity: None
+  sessionAffinity: ClientIP
   # sessionAffinityConfig:
   #   clientIP:
   #     timeoutSeconds: 10800

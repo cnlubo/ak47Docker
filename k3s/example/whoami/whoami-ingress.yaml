@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: "nginx"
   rules:
-    - host: cn.ak47.com
+    - host: test123.com
       http:
         paths:
           - path: /whoami
@@ -17,5 +17,12 @@ spec:
             backend:
               service:
                 name: whoami-service
+                port:
+                  number: 80
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: myapp
                 port:
                   number: 80
