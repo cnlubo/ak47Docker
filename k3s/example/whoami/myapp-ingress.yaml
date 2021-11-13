@@ -1,28 +1,25 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: whoami-ingress
+  name: myapp-ingress
   namespace: default
   annotations:
     ingressclass.kubernetes.io/is-default-class: "true"
     nginx.ingress.kubernetes.io/rewrite-target: "/"
+    nginx.ingress.kubernetes.io/affinity: cookie
+    nginx.ingress.kubernetes.io/affinity-mode: persistent
+    nginx.ingress.kubernetes.io/session-cookie-hash: sha1
+    #nginx.ingress.kubernetes.io/session-cookie-name: awesome-java
 spec:
   ingressClassName: "nginx"
   rules:
     - host: test123.com
       http:
         paths:
-          - path: /whoami
-            pathType: Prefix
-            backend:
-              service:
-                name: whoami-service
-                port:
-                  number: 80
           - pathType: Prefix
             path: "/"
             backend:
               service:
                 name: myapp
                 port:
-                  number: 80
+                  number: 31180

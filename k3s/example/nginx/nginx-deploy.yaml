@@ -1,0 +1,139 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx
+  labels:
+    app.kubernetes.io/name: nginx
+    app.kubernetes.io/instance: nginx
+
+# ---
+# kind: ConfigMap
+# apiVersion: v1
+# metadata:
+#   name: nginx-index
+#   namespace: nginx
+# data:
+#   index.html: |-
+#     {"This is Service"}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: nginx
+  labels:
+    app: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 3
+  strategy:
+    rollingUpdate:
+      maxSurge: 25% # 能够额外创建的Pod个数
+      maxUnavailable: 25% # 在更新过程中能够进入不可用状态的Pod的最大值
+    type: RollingUpdate
+  template: # Pod的定义，用于创建Pod，也称为Pod template
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      # initContainers:
+      # Init containers are exactly like regular containers, except:
+      # - Init containers always run to completion.
+      # - Each init container must complete successfully before the next one starts.
+      containers:
+        - name: nginx
+          image: nginx:latest
+          resources:
+            requests:
+              cpu: 100m
+              memory: 200Mi
+            limits:
+              cpu: 100m
+              memory: 200Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
+          ports:
+            - containerPort: 80
+              name: nginx
+          volumeMounts:
+            - name: localtime
+              mountPath: /etc/localtime
+            # - name: index-volume
+            #   mountPath: /usr/share/nginx/html
+      volumes:
+        - name: localtime
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Shanghai
+        # - name: index-volume
+        #   configMap:
+        #     name: nginx-index
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+  namespace: nginx
+spec:
+  selector:
+    app: nginx
+  type: ClusterIP
+  sessionAffinity: None
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+  ports:
+    - name: plain-http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+      # If you set the `spec.type` field to `NodePort` and you want a specific port number,
+      # you can specify a value in the `spec.ports[*].nodePort` field.
+      #nodePort:
+---
+# https://kubernetes.io/docs/concepts/services-networking/ingress/#the-ingress-resource
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  namespace: nginx
+  annotations:
+    ingressclass.kubernetes.io/is-default-class: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: "/"
+    nginx.ingress.kubernetes.io/affinity: cookie
+    nginx.ingress.kubernetes.io/affinity-mode: persistent
+    nginx.ingress.kubernetes.io/session-cookie-hash: sha1
+    nginx.ingress.kubernetes.io/session-cookie-name: INGRESSCOOKIE
+spec:
+  ingressClassName: "nginx"
+  rules:
+    - host: stickyingress.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-svc
+                port:
+                  number: 80
