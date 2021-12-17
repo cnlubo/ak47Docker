@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: whoami-deployment
-  namespace: default
+  name: whoami
+  namespace: whoami
   labels:
     app: whoami
 spec:
   selector:
     matchLabels:
       app: whoami
-  replicas: 3
-  # strategy:
-  #   rollingUpdate:
-  #     maxSurge: 25%
-  #     maxUnavailable: 25%
-  #   type: RollingUpdate
+  replicas: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -34,23 +34,23 @@ spec:
             limits:
               cpu: 100m
               memory: 200Mi
-          # livenessProbe:
-          #   tcpSocket:
-          #     port: 80
-          #   initialDelaySeconds: 5
-          #   timeoutSeconds: 5
-          #   successThreshold: 1
-          #   failureThreshold: 3
-          #   periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /health
               port: 80
-          #   initialDelaySeconds: 5
-          #   timeoutSeconds: 2
-          #   successThreshold: 1
-          #   failureThreshold: 3
-          #   periodSeconds: 10
+            # initialDelaySeconds: 5
+            # timeoutSeconds: 2
+            # successThreshold: 1
+            # failureThreshold: 3
+            # periodSeconds: 10
           ports:
             - containerPort: 80
               name: whoami
@@ -62,3 +62,4 @@ spec:
           hostPath:
             path: /usr/share/zoneinfo/Asia/Shanghai
       restartPolicy: Always
+

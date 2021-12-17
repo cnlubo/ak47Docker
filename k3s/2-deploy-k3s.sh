@@ -11,7 +11,7 @@ GREEN='\033[0;32m'
 LB='\033[1;34m' # light blue
 NC='\033[0m'    # No Color
 
-k8sversion=1.22.3
+k8sversion=1.22.4
 read -p "Which k8s version do you want to use? check https://github.com/k3s-io/k3s/releases (default:$k8sversion) promt with [ENTER]:" inputK8Sversion
 k8sversion="${inputK8Sversion:-$k8sversion}"
 echo "$k8sversion" >k8sversion
