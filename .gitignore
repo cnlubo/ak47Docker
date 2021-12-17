@@ -16,3 +16,4 @@
 /k3s/hosts.local
 /k3s/k3s.yaml
 /k3s/k3s.yaml.back
+docker.code-workspace
