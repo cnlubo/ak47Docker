@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: whoami
-  labels:
-    app.kubernetes.io/instance: whoami
-    app.kubernetes.io/name: whoami
-

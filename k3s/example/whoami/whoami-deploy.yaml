@@ -128,7 +128,7 @@ spec:
   - host: test123.com
     http:
       paths:
-      - path: /
+      - path: /whoami
         pathType: Prefix
         backend:
           service:
