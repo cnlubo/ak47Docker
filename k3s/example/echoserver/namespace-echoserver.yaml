@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: echoserver
+  labels:
+    app.kubernetes.io/instance: echo-server
+    app.kubernetes.io/name: echo-server
+
