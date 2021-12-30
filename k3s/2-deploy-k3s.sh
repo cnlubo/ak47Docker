@@ -2,8 +2,8 @@
 ###
  # @Author: your name
  # @Date: 2021-10-10 11:27:35
- # @LastEditTime: 2021-11-13 10:40:28
- # @LastEditors: your name
+ # @LastEditTime: 2021-12-30 18:17:08
+ # @LastEditors: Please set LastEditors
  # @Description: In User Settings Edit
  # @FilePath: /ak47Docker/k3s/2-deploy-k3s.sh
 ### 
@@ -11,7 +11,7 @@ GREEN='\033[0;32m'
 LB='\033[1;34m' # light blue
 NC='\033[0m'    # No Color
 
-k8sversion=1.22.4
+k8sversion=1.22.5
 read -p "Which k8s version do you want to use? check https://github.com/k3s-io/k3s/releases (default:$k8sversion) promt with [ENTER]:" inputK8Sversion
 k8sversion="${inputK8Sversion:-$k8sversion}"
 echo "$k8sversion" >k8sversion

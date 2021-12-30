@@ -1,4 +1,12 @@
 #!/bin/bash
+###
+ # @Author: your name
+ # @Date: 2021-12-17 22:45:32
+ # @LastEditTime: 2021-12-30 16:58:35
+ # @LastEditors: your name
+ # @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ # @FilePath: /ak47Docker/k3s/4-deploy-ingress-nginx.sh
+### 
 GREEN='\033[0;32m'
 LB='\033[1;34m' # light blue
 NC='\033[0m'    # No Color
@@ -16,10 +24,8 @@ WORKERS=$(echo $(multipass list | grep worker | awk '{print $1}'))
 
 # done
 sleep 5
-#export KUBECONFIG=$(pwd)/k3s.yaml
-# kubectl create ns ingress-nginx
-# 默认开启 hostNetwork
-kubectl create -f addons/ingress-nginx/1.1.0/deploy.yaml
+
+kubectl create -f addons/k8s-Ingress-nginx/deploy-clound.yaml
 sleep 10
 POD_NAMESPACE=ingress-nginx
 POD_NAME=$(kubectl get pods -n $POD_NAMESPACE -l app.kubernetes.io/name=ingress-nginx --field-selector=status.phase=Running -o jsonpath='{.items[0].metadata.name}')
