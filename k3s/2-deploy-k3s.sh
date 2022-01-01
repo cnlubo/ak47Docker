@@ -28,7 +28,7 @@ echo -e "[${LB}Info${NC}] deploy k3s on k3s-master"
 #multipass exec k3s-master -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn INSTALL_K3S_CHANNEL=stable K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--disable=traefik"  sh -" ｜grep -w "Using"
 #multipass exec k3s-master -- /bin/bash -c "curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=stable K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--disable=traefik"  sh -" ｜grep -w "Using
 #multipass exec k3s-master -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_VERSION=${K3S_VERSION} INSTALL_K3S_MIRROR=cn K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--disable=traefik"  sh -" ｜grep -w "Using"
-multipass exec k3s-master -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_CHANNEL=latest INSTALL_K3S_MIRROR=cn K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--disable=traefik"  sh -" ｜grep -w "Using"
+multipass exec k3s-master -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_CHANNEL=latest INSTALL_K3S_MIRROR=cn K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--disable=servicelb,traefik"  sh -" ｜grep -w "Using"
 #multipass exec k3s-master -- /bin/bash -c "curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=${K3S_VERSION} K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--disable=traefik" sh -" | grep "Using"
 sleep 10
 # Get the IP of the master node
