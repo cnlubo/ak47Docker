@@ -5,10 +5,17 @@ kind: Ingress
 metadata:
   name: source-ip-ingress
   namespace: echoserver
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/clusterissuer: selfsigned-cluster-issuer
 spec:
   ingressClassName: "nginx"
+  tls:
+    - hosts:
+        - abc.test123.com
+      secretName: test123-com-tls
   rules:
-    - host: test123.com
+    - host: abc.test123.com
       http:
         paths:
           - path: /

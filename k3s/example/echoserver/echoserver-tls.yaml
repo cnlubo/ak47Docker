@@ -1,0 +1,47 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: test123-com
+  # Certificate资源所在的命名空间必须和需要自签证书的资源在同一个命名空间
+  namespace: echoserver
+spec:
+  # Secret names are always required.
+  secretName: test123-com-tls
+  duration: 2880h # 120d 有效期
+  renewBefore: 360h # 15d 到期前15天进行续订
+  subject:
+    organizations:
+      - cnak47
+  # The use of the common name field has been deprecated since 2000 and is
+  # discouraged from being used.
+  commonName: test123.com
+  isCA: false
+  privateKey:
+    # 算法 RSA(兼容性最好),Ed25519,ECDSA(不推荐使用)
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+  usages:
+    - server auth
+    # 表示 client 可以用该证书对 server 提供的证书进行验证
+    - client auth
+    # 表示 server 可以用该证书对 client 提供的证书进行验证
+
+  # DNSNames是要在证书上设置的DNS subjectAltNames的列表 域名需要解析之后 Certificate才能创建成功
+  # 否则会报错 Issuing certificate as Secret does not exist
+  dnsNames:
+    - test123.com
+    - "*.test123.com"
+  # uris:
+  #  - spiffe://cluster.local/ns/sandbox/sa/example
+  # ipAddresses:
+  #  - 192.168.0.5
+  # Issuer references are always required.
+  issuerRef:
+    name: selfsigned-cluster-issuer
+    # We can reference ClusterIssuers by changing the kind here.
+    # The default value is Issuer (i.e. a locally namespaced Issuer)
+    kind: ClusterIssuer
+    # This is optional since cert-manager will default to this value however
+    # if you are using an external issuer, change this to that issuer group.
+    group: cert-manager.io
