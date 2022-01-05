@@ -1,0 +1,27 @@
+# https://kubernetes.io/docs/concepts/services-networking/ingress/#the-ingress-resource
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: source-ip-ca-tls-ingress
+  namespace: echoserver
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+   # cert-manager.io/clusterissuer: selfsigned-cluster-issuer
+spec:
+  ingressClassName: "nginx"
+  tls:
+    - hosts:
+        - sourceip.test123.com
+      secretName: source-ip-app-test123-com-tls
+  rules:
+    - host: sourceip.test123.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: source-ip-srv
+                port:
+                  number: 80
