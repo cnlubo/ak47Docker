@@ -1,12 +1,13 @@
 #!/bin/bash
 ###
  # @Author: your name
- # @Date: 2021-10-10 11:27:35
- # @LastEditTime: 2021-12-30 18:17:08
- # @LastEditors: Please set LastEditors
- # @Description: In User Settings Edit
+ # @Date: 2022-01-04 09:57:53
+ # @LastEditTime: 2022-01-06 18:07:03
+ # @LastEditors: your name
+ # @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  # @FilePath: /ak47Docker/k3s/2-deploy-k3s.sh
 ### 
+###
 GREEN='\033[0;32m'
 LB='\033[1;34m' # light blue
 NC='\033[0m'    # No Color
@@ -40,7 +41,7 @@ K3S_TOKEN="$(multipass exec k3s-master -- /bin/bash -c "sudo cat /var/lib/ranche
 WORKERS=$(echo $(multipass list | grep worker | awk '{print $1}'))
 for WORKER in ${WORKERS}; do
     echo -e "[${LB}Info${NC}] deploy k3s on ${WORKER}"
-     multipass exec ${WORKER} -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_CHANNEL=latest INSTALL_K3S_MIRROR=cn K3S_TOKEN=${K3S_TOKEN} K3S_URL=${K3S_NODEIP_MASTER} sh -" | grep -w "Using"
+    multipass exec ${WORKER} -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_CHANNEL=latest INSTALL_K3S_MIRROR=cn K3S_TOKEN=${K3S_TOKEN} K3S_URL=${K3S_NODEIP_MASTER} sh -" | grep -w "Using"
     #multipass exec ${WORKER} -- /bin/bash -c "curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=${K3S_VERSION} K3S_TOKEN=${K3S_TOKEN} K3S_URL=${K3S_NODEIP_MASTER} sh -" | grep -w "Using"
 done
 sleep 10
