@@ -1,12 +1,12 @@
 #!/bin/bash
 ###
- # @Author: your name
- # @Date: 2022-01-04 09:57:53
- # @LastEditTime: 2022-01-06 18:07:03
- # @LastEditors: your name
- # @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- # @FilePath: /ak47Docker/k3s/2-deploy-k3s.sh
-### 
+# @Author: your name
+# @Date: 2022-01-04 09:57:53
+# @LastEditTime: 2022-01-06 18:07:03
+# @LastEditors: your name
+# @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+# @FilePath: /ak47Docker/k3s/2-deploy-k3s.sh
+###
 ###
 GREEN='\033[0;32m'
 LB='\033[1;34m' # light blue
@@ -25,12 +25,9 @@ echo "Now deploying k3s on multipass VMs"
 echo "############################################################################"
 
 echo -e "[${LB}Info${NC}] deploy k3s on k3s-master"
-# disable traefik
-#multipass exec k3s-master -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn INSTALL_K3S_CHANNEL=stable K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--disable=traefik"  sh -" ｜grep -w "Using"
-#multipass exec k3s-master -- /bin/bash -c "curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=stable K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--disable=traefik"  sh -" ｜grep -w "Using
-#multipass exec k3s-master -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_VERSION=${K3S_VERSION} INSTALL_K3S_MIRROR=cn K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--disable=traefik"  sh -" ｜grep -w "Using"
-multipass exec k3s-master -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_CHANNEL=latest INSTALL_K3S_MIRROR=cn K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--disable=servicelb,traefik"  sh -" ｜grep -w "Using"
-#multipass exec k3s-master -- /bin/bash -c "curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=${K3S_VERSION} K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--disable=traefik" sh -" | grep "Using"
+# disable traefik servicelb
+# multipass exec k3s-master -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_CHANNEL=latest INSTALL_K3S_MIRROR=cn K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--disable=servicelb,traefik"  sh -" ｜grep -w "Using"
+multipass exec k3s-master -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_VERSION=${K3S_VERSION} INSTALL_K3S_MIRROR=cn K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--disable=servicelb,traefik"  sh -" ｜grep -w "Using"
 sleep 10
 # Get the IP of the master node
 K3S_NODEIP_MASTER="https://$(multipass info k3s-master | grep "IPv4" | awk -F' ' '{print $2}'):6443"
