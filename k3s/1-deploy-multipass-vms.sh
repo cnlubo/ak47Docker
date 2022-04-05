@@ -1,7 +1,17 @@
 #!/bin/bash
+###
+# @Author: cnak47
+# @Date: 2022-01-17 13:57:59
+ # @LastEditors: cnak47
+ # @LastEditTime: 2022-04-04 08:29:12
+ # @FilePath: /ak47Docker/k3s/1-deploy-multipass-vms.sh
+# @Description:
+#
+# Copyright (c) 2022 by cnak47, All Rights Reserved.
+###
 # check if required applications and files are available
 #./utils/dependency-check.sh
-
+set -e
 nodeCount=2
 read -p "How many worker nodes do you want?(default:$nodeCount) promt with [ENTER]:" inputNode
 nodeCount="${inputNode:-$nodeCount}"
@@ -14,11 +24,11 @@ memCount="${inputMem:-$memCount}"
 diskCount=5
 read -p "How many gigabyte diskspace do you want per node?(default:$diskCount) promt with [ENTER]:" inputDisk
 diskCount="${inputDisk:-$diskCount}"
-OSversion=18.04
+OSversion=20.04
 read -p "Which Ubuntu version do you want to use? check multipass find (default:$OSversion) promt with [ENTER]:" inputOSversion
 OSversion="${inputOSversion:-$OSversion}"
 
-MASTER=$(echo "k3s-master ") 
+MASTER=$(echo "k3s-master ")
 WORKER=$(eval 'echo k3s-worker{1..'"$nodeCount"'}')
 
 NODES+=$MASTER
@@ -41,12 +51,12 @@ echo "##########################################################################
 echo "Writing multipass host entries to /etc/hosts on the VMs:"
 
 for NODE in ${NODES}; do
-  multipass transfer hosts.vm ${NODE}:
-  multipass transfer ~/.ssh/id_rsa.pub ${NODE}:
-  multipass exec ${NODE} -- sudo iptables -P FORWARD ACCEPT
-  multipass exec ${NODE} -- bash -c 'sudo cat /home/ubuntu/id_rsa.pub >> /home/ubuntu/.ssh/authorized_keys'
-  multipass exec ${NODE} -- bash -c 'sudo chown ubuntu:ubuntu /etc/hosts'
-  multipass exec ${NODE} -- bash -c 'sudo cat /home/ubuntu/hosts.vm >> /etc/hosts'
+    multipass transfer hosts.vm ${NODE}:
+    multipass transfer ~/.ssh/id_rsa.pub ${NODE}:
+    multipass exec ${NODE} -- sudo iptables -P FORWARD ACCEPT
+    multipass exec ${NODE} -- bash -c 'sudo cat /home/ubuntu/id_rsa.pub >> /home/ubuntu/.ssh/authorized_keys'
+    multipass exec ${NODE} -- bash -c 'sudo chown ubuntu:ubuntu /etc/hosts'
+    multipass exec ${NODE} -- bash -c 'sudo cat /home/ubuntu/hosts.vm >> /etc/hosts'
 done
 
 # cleanup tmp hostfiles

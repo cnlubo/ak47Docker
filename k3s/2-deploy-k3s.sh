@@ -1,18 +1,20 @@
 #!/bin/bash
 ###
-# @Author: your name
-# @Date: 2022-01-04 09:57:53
-# @LastEditTime: 2022-01-06 18:07:03
-# @LastEditors: your name
-# @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
-# @FilePath: /ak47Docker/k3s/2-deploy-k3s.sh
-###
-###
+ # @Author: cnak47
+ # @Date: 2022-01-17 13:57:59
+ # @LastEditors: cnak47
+ # @LastEditTime: 2022-04-04 08:50:05
+ # @FilePath: /ak47Docker/k3s/2-deploy-k3s.sh
+ # @Description: 
+ # 
+ # Copyright (c) 2022 by cnak47, All Rights Reserved. 
+### 
+set -e
 GREEN='\033[0;32m'
 LB='\033[1;34m' # light blue
 NC='\033[0m'    # No Color
 
-k8sversion=1.22.5
+k8sversion=1.23.5
 read -p "Which k8s version do you want to use? check https://github.com/k3s-io/k3s/releases (default:$k8sversion) promt with [ENTER]:" inputK8Sversion
 k8sversion="${inputK8Sversion:-$k8sversion}"
 echo "$k8sversion" >k8sversion
@@ -38,8 +40,8 @@ K3S_TOKEN="$(multipass exec k3s-master -- /bin/bash -c "sudo cat /var/lib/ranche
 WORKERS=$(echo $(multipass list | grep worker | awk '{print $1}'))
 for WORKER in ${WORKERS}; do
     echo -e "[${LB}Info${NC}] deploy k3s on ${WORKER}"
-    multipass exec ${WORKER} -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_CHANNEL=latest INSTALL_K3S_MIRROR=cn K3S_TOKEN=${K3S_TOKEN} K3S_URL=${K3S_NODEIP_MASTER} sh -" | grep -w "Using"
-    #multipass exec ${WORKER} -- /bin/bash -c "curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=${K3S_VERSION} K3S_TOKEN=${K3S_TOKEN} K3S_URL=${K3S_NODEIP_MASTER} sh -" | grep -w "Using"
+    #multipass exec ${WORKER} -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_CHANNEL=latest INSTALL_K3S_MIRROR=cn K3S_TOKEN=${K3S_TOKEN} K3S_URL=${K3S_NODEIP_MASTER} sh -" | grep -w "Using"
+    multipass exec ${WORKER} -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_VERSION=${K3S_VERSION} INSTALL_K3S_MIRROR=cn K3S_TOKEN=${K3S_TOKEN} K3S_URL=${K3S_NODEIP_MASTER} sh -" | grep -w "Using"
 done
 sleep 10
 
@@ -47,10 +49,10 @@ echo "##########################################################################
 echo exporting KUBECONFIG file from master node
 multipass exec k3s-master -- bash -c 'sudo cat /etc/rancher/k3s/k3s.yaml' >k3s.yaml
 sed -i'.back' -e 's/127.0.0.1/k3s-master/g' k3s.yaml
-export KUBECONFIG=$(pwd)/k3s.yaml && echo -e "[${LB}Info${NC}] setting KUBECONFIG=${KUBECONFIG}"
-
+#export KUBECONFIG=$(pwd)/k3s.yaml && echo -e "[${LB}Info${NC}] setting KUBECONFIG=${KUBECONFIG}"
+cp ~/.kube/config ~/.kube/config_bak
+cp $(pwd)/k3s.yaml ~/.kube/config
 kubectl config rename-context default k3s-multipass
-
 echo -e "[${LB}Info${NC}] tainting master node: k3s-master"
 # 设置污点默认情况下master节点将不会调度运行Pod
 kubectl taint node k3s-master node-role.kubernetes.io/master=effect:NoSchedule
