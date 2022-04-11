@@ -2,9 +2,9 @@
 ###
 # @Author: cnak47
 # @Date: 2022-04-09 16:56:18
- # @LastEditors: cnak47
- # @LastEditTime: 2022-04-09 18:25:26
- # @FilePath: /docker_workspace/ak47Docker/k3s/3-0-deploy-metal-lb.sh
+# @LastEditors: cnak47
+# @LastEditTime: 2022-04-11 22:20:08
+# @FilePath: /ak47Docker/k3s/3-0-deploy-metal-lb.sh
 # @Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
@@ -17,8 +17,6 @@ echo -e "[${GREEN}Deploying MetalLB LoadBalancer${NC}]"
 echo "############################################################################"
 
 metallb_version=0.12.1
-# kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v$metallb_version/manifests/namespace.yaml
-# kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v$metallb_version/manifests/metallb.yaml
 if [ ! -d addons/metal-lb/$metallb_version ]; then
     mkdir -p addons/metal-lb/$metallb_version
     wget https://raw.githubusercontent.com/metallb/metallb/v$metallb_version/manifests/namespace.yaml \
