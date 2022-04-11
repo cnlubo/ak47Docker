@@ -54,11 +54,6 @@ spec:
             httpGet:
               path: /health
               port: 80
-            # initialDelaySeconds: 5
-            # timeoutSeconds: 2
-            # successThreshold: 1
-            # failureThreshold: 3
-            # periodSeconds: 10
           ports:
             - containerPort: 80
               name: whoami
@@ -123,15 +118,15 @@ metadata:
   name: whoami-ingress
   namespace: whoami
 spec:
- # ingressClassName: "nginx"
+  # ingressClassName: "nginx"
   rules:
-  - host: test123.com
-    http:
-      paths:
-      - path: /whoami
-        pathType: Prefix
-        backend:
-          service:
-            name: whoami-service
-            port:
-              number: 80
+    - host: test123.com
+      http:
+        paths:
+          - path: /whoami
+            pathType: Prefix
+            backend:
+              service:
+                name: whoami-service
+                port:
+                  number: 80

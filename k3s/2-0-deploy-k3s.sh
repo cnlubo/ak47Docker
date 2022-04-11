@@ -1,14 +1,14 @@
 #!/bin/bash
 ###
- # @Author: cnak47
- # @Date: 2022-01-17 13:57:59
- # @LastEditors: cnak47
- # @LastEditTime: 2022-04-04 08:50:05
- # @FilePath: /ak47Docker/k3s/2-deploy-k3s.sh
- # @Description: 
- # 
- # Copyright (c) 2022 by cnak47, All Rights Reserved. 
-### 
+# @Author: cnak47
+# @Date: 2022-01-17 13:57:59
+# @LastEditors: cnak47
+# @LastEditTime: 2022-04-09 17:47:21
+# @FilePath: /docker_workspace/ak47Docker/k3s/2-0-deploy-k3s.sh
+# @Description:
+#
+# Copyright (c) 2022 by cnak47, All Rights Reserved.
+###
 set -e
 GREEN='\033[0;32m'
 LB='\033[1;34m' # light blue
@@ -41,7 +41,7 @@ WORKERS=$(echo $(multipass list | grep worker | awk '{print $1}'))
 for WORKER in ${WORKERS}; do
     echo -e "[${LB}Info${NC}] deploy k3s on ${WORKER}"
     #multipass exec ${WORKER} -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_CHANNEL=latest INSTALL_K3S_MIRROR=cn K3S_TOKEN=${K3S_TOKEN} K3S_URL=${K3S_NODEIP_MASTER} sh -" | grep -w "Using"
-    multipass exec ${WORKER} -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_VERSION=${K3S_VERSION} INSTALL_K3S_MIRROR=cn K3S_TOKEN=${K3S_TOKEN} K3S_URL=${K3S_NODEIP_MASTER} sh -" | grep -w "Using"
+    multipass exec "${WORKER}" -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_VERSION=${K3S_VERSION} INSTALL_K3S_MIRROR=cn K3S_TOKEN=${K3S_TOKEN} K3S_URL=${K3S_NODEIP_MASTER} sh -" | grep -w "Using"
 done
 sleep 10
 

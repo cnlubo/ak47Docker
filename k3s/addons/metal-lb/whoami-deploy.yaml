@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: who
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: whoami
+  namespace: who
+  labels:
+    app: whoami
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: whoami
+  template:
+    metadata:
+      labels:
+        app: whoami
+    spec:
+      containers:
+        - name: whoami-container
+          image: containous/whoami
+          ports:
+            - name: web
+              containerPort: 80
+---
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: who
+  name: whoami
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      name: web
+  selector:
+    app: whoami

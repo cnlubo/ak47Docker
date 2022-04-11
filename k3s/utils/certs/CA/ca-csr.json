@@ -1,0 +1,16 @@
+{
+  "CN": "ak47.test.com",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "CN",
+      "ST": "Beijing",
+      "L": "Beijing",
+      "O": "soft",
+      "OU": "ak47"
+    }
+  ]
+}

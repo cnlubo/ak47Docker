@@ -1,14 +1,16 @@
 <!--
+
  * @Author: cnak47
  * @Date: 2022-04-08 11:46:13
  * @LastEditors: cnak47
  * @LastEditTime: 2022-04-08 17:01:51
  * @FilePath: /ak47Docker/k3s/addons/traefik/2.6.3/readme.md
  * @Description: 
- * 
  * Copyright (c) 2022 by cnak47, All Rights Reserved. 
 -->
-# Install Traefik Kubernetes CRD Ingress Controller
+# Traefik Ingress Controller CRD
+
+- crd 目录：crd 文件
 
 - 001-3-tls-options.yaml 
   (optional),enforces by default that TLS 1.3 is to be used for secure connections
