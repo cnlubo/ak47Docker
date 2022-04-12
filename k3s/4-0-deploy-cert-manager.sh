@@ -3,13 +3,14 @@
 # @Author: cnak47
 # @Date: 2022-04-11 15:58:31
  # @LastEditors: cnak47
- # @LastEditTime: 2022-04-11 17:58:57
+ # @LastEditTime: 2022-04-12 11:38:27
  # @FilePath: /docker_workspace/ak47Docker/k3s/4-0-deploy-cert-manager.sh
 # @Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
 ###
 set -e
+
 # Color Palette
 RESET='\033[0m'
 BOLD='\033[1m'
@@ -55,14 +56,10 @@ error() {
 certmanager_version="1.8.0"
 if [ ! -d addons/cert-manager/$certmanager_version ]; then
     mkdir -p addons/cert-manager/$certmanager_version
-    # wget https://github.com/cert-manager/cert-manager/releases/download/v$certmanager_version/cert-manager.crds.yaml \
-    #     -O addons/cert-manager/$certmanager_version/cert-manager.crds.yaml
     wget https://github.com/cert-manager/cert-manager/releases/download/v$certmanager_version/cert-manager.yaml \
         -O addons/cert-manager/$certmanager_version/cert-manager.yaml
 fi
 info "Install cert-manager $certmanager_version"
-kubectl create namespace cert-manager
-sleep 5
 kubectl apply -f addons/cert-manager/$certmanager_version/cert-manager.yaml
 sleep 15
 # kubectl plugin install
@@ -74,5 +71,6 @@ if [ ! -f /usr/local/bin/kubectl-cert_manager ]; then
     tar xzf kubectl-cert-manager.tar.gz
     sudo mv kubectl-cert_manager /usr/local/bin
 fi
+sleep 15
 info "Check cert-manager Install"
 kubectl cert-manager check api
