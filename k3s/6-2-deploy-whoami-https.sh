@@ -1,12 +1,14 @@
 #!/bin/bash
 ###
-# @Author: your name
-# @Date: 2021-12-17 22:45:32
- # @LastEditTime: 2022-04-13 10:45:46
+ # @Author: cnak47
+ # @Date: 2022-04-13 11:43:45
  # @LastEditors: cnak47
-# @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- # @FilePath: /docker_workspace/ak47Docker/k3s/6-1-uninstall-ingress-nginx.sh
-###
+ # @LastEditTime: 2022-04-13 11:58:21
+ # @FilePath: /docker_workspace/ak47Docker/k3s/6-1-deploy-whoami-tls.sh
+ # @Description: 
+ # 
+ # Copyright (c) 2022 by cnak47, All Rights Reserved. 
+### 
 set -e
 # Color Palette
 RESET='\033[0m'
@@ -49,15 +51,13 @@ warn() {
 error() {
     log "${RED}ERROR${RESET} ==> ${*}"
 }
-k8s_ingress_controller_version='1.1.3'
-info "Uninstall Nginx Ingress Controller"
-info "############################################################################"
-WORKERS=$(echo $(multipass list | grep worker | awk '{print $1}'))
-for WORKER in ${WORKERS}; do
-    echo -e "[${LB}Info${NC}] delete Label isIngress on ${WORKER}"
-    kubectl label nodes ${WORKER} isIngress-
-done
-sleep 5
-kubectl delete -f addons/k8s-ingress-nginx/controller-v$k8s_ingress_controller_version/deploy-clound.yaml
+
+info "deploy whoami app"
+kubectl apply -f example/whoami/whoami-deploy.yaml
 sleep 10
-kubectl get pods -A
+info "deploy whoami app certificate"
+kubectl apply -f example/whoami/whoami-certificate.yaml
+sleep 10
+info "deploy whoami ingress"
+kubectl apply -f example/whoami/whoami-ingress-https.yaml
+sleep 5

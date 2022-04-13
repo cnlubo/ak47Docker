@@ -1,0 +1,32 @@
+# site-example-com.certificate.example-com.yaml
+# 参考：https://cert-manager.io/docs/usage/certificate/
+# api参考：https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1.Certificate
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: whoami-app-cert 
+  # 需要使用证书的应用所在的命名空间
+  namespace: whoami 
+spec:
+  secretName: whoami-app-tls
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+  subject:
+    organizations:
+    - soft Inc.
+  commonName: whoami.test321.com
+  isCA: false
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+  dnsNames:
+  - whoami.test321.com
+  issuerRef:
+    name: ca-issuer #使用 CA Issuer
+    # We can reference ClusterIssuers by changing the kind here.
+    # The default value is Issuer (i.e. a locally namespaced Issuer)
+    kind: ClusterIssuer ### CA Issuer是ClusterIssuer
+    # This is optional since cert-manager will default to this value however
+    # if you are using an external issuer, change this to that issuer group.
+    group: cert-manager.io

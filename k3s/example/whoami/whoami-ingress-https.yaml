@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: whoami-tls-ingress
+  namespace: whoami
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # cert-manager.io/clusterissuer: selfsigned-cluster-issuer
+spec:
+  ingressClassName: "nginx"
+  tls:
+    - hosts:
+        - whoami.test321.com
+      secretName: whoami-app-tls
+  rules:
+    - host: whoami.test321.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: whoami-service
+                port:
+                  number: 80

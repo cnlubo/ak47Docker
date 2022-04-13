@@ -3,15 +3,13 @@
 # @Author: cnak47
 # @Date: 2021-12-30 23:07:02
  # @LastEditors: cnak47
- # @LastEditTime: 2022-04-12 17:47:39
+ # @LastEditTime: 2022-04-13 11:02:30
  # @FilePath: /docker_workspace/ak47Docker/k3s/6-0-deploy-ingress-nginx.sh
 # @Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
 ###
-
 set -e
-
 # Color Palette
 RESET='\033[0m'
 BOLD='\033[1m'
@@ -60,25 +58,24 @@ if [ ! -d addons/k8s-ingress-nginx/controller-v$k8s_ingress_controller_version ]
         -O addons/k8s-ingress-nginx/controller-v$k8s_ingress_controller_version/deploy-clound.yaml
 fi
 info "Install k8s_ingress_nginx_controller v$k8s_ingress_controller_version"
-# echo -e "[${GREEN}Deploying Nginx Ingress Controller${NC}]"
-# echo "############################################################################"
 info "############################################################################"
-WORKERS=$(echo $(multipass list | grep worker | awk '{print $1}'))
-for WORKER in ${WORKERS}; do
-    #     echo -e "[${LB}Info${NC}] deploy images on ${WORKER}"
-    #     multipass transfer addons/ingress-nginx/1.0.3/ingress-nginx-controller.tar "${WORKER}":
-    #     multipass transfer addons/ingress-nginx/1.0.3/ingress-nginx-kube-webhook-certgen.tar "${WORKER}":
-    #     multipass exec "${WORKER}" -- /bin/bash -c "sudo ctr -n=k8s.io images import ingress-nginx-controller.tar" | grep -w "unpacking"
-    #     multipass exec "${WORKER}" -- /bin/bash -c "sudo ctr -n=k8s.io images import ingress-nginx-kube-webhook-certgen.tar" | grep -w "unpacking"
-    #     multipass exec "${WORKER}" -- /bin/bash -c "sudo crictl images" | grep -w "ingress-nginx"
-    # echo -e "[${LB}Info${NC}] set Label isIngress on ${WORKER}"
-    info "set Label isIngress on ${WORKER}"
-    kubectl label nodes ${WORKER} isIngress="true"
 
+WORKERS=$(echo $(multipass list | grep worker | awk '{print $1}'))
+
+for WORKER in ${WORKERS}; do
+     info "deploy images on ${WORKER}"
+     multipass transfer addons/k8s-ingress-nginx/controller-v$k8s_ingress_controller_version/ingress-nginx-controller.tar "${WORKER}":
+     multipass transfer addons/k8s-ingress-nginx/controller-v$k8s_ingress_controller_version/ingress-nginx-kube-webhook-certgen.tar "${WORKER}":
+     multipass exec "${WORKER}" -- /bin/bash -c "sudo ctr -n=k8s.io images import ingress-nginx-controller.tar" | grep -w "unpacking"
+     multipass exec "${WORKER}" -- /bin/bash -c "sudo ctr -n=k8s.io images import ingress-nginx-kube-webhook-certgen.tar" | grep -w "unpacking"
+     multipass exec "${WORKER}" -- /bin/bash -c "sudo crictl images" | grep -w "ingress-nginx"
+    info "set Label isIngress on ${WORKER}"
+    kubectl label nodes "${WORKER}" isIngress="true"
 done
 sleep 5
 kubectl create -f addons/k8s-Ingress-nginx/controller-v$k8s_ingress_controller_version/deploy-clound.yaml
 sleep 30
+info "check ingress-nginx status"
 POD_NAMESPACE=ingress-nginx
 POD_NAME=$(kubectl get pods -n $POD_NAMESPACE -l app.kubernetes.io/name=ingress-nginx --field-selector=status.phase=Running -o jsonpath='{.items[0].metadata.name}')
 kubectl exec -it "$POD_NAME" -n $POD_NAMESPACE -- /nginx-ingress-controller --version
