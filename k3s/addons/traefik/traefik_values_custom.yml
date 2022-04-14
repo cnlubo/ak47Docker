@@ -1,0 +1,16 @@
+image:
+  name: traefik
+  # defaults to appVersion
+  tag: "2.6.3"
+  pullPolicy: IfNotPresent
+deployment:
+  enabled: true
+  # Can be either Deployment or DaemonSet
+  kind: Deployment
+  # Number of pods of the deployment (only applies when kind == Deployment)
+  replicas: 2
+
+additionalArguments:
+  - "--serversTransport.insecureSkipVerify=true"
+  - "--api.insecure=true"
+  - "--api.dashboard=false"
