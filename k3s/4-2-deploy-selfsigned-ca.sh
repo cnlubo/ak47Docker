@@ -3,8 +3,8 @@
 # @Author: cnak47
 # @Date: 2022-04-12 11:41:14
  # @LastEditors: cnak47
- # @LastEditTime: 2022-04-12 16:12:09
- # @FilePath: /docker_workspace/ak47Docker/k3s/4-1-deploy-selfsigned-ca.sh
+ # @LastEditTime: 2022-04-14 22:27:51
+ # @FilePath: /ak47Docker/k3s/4-2-deploy-selfsigned-ca.sh
 # @Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
@@ -36,32 +36,31 @@ ON_WHITE='\033[48;5;7m'
 MODULE="$(basename $0)"
 
 stderr_print() {
-  printf "%b\\n" "${*}" >&2
+    printf "%b\\n" "${*}" >&2
 }
 log() {
-  stderr_print "[${BLUE}${MODULE} ${MAGENTA}$(date "+%Y-%m-%d %H:%M:%S ")${RESET}] ${*}"
+    stderr_print "[${BLUE}${MODULE} ${MAGENTA}$(date "+%Y-%m-%d %H:%M:%S ")${RESET}] ${*}"
 }
 info() {
 
-  log "${GREEN}INFO ${RESET} ==> ${*}"
+    log "${GREEN}INFO ${RESET} ==> ${*}"
 }
 warn() {
 
-  log "${YELLOW}WARN ${RESET} ==> ${*}"
+    log "${YELLOW}WARN ${RESET} ==> ${*}"
 }
 error() {
-  log "${RED}ERROR${RESET} ==> ${*}"
+    log "${RED}ERROR${RESET} ==> ${*}"
 }
 
-#cd ./addons/cert-manager || exit
-if [ -f ./addons/cert-manager/selfsigned-ca.custom.yaml ]; then
-  rm ./addons/cert-manager/selfsigned-ca.custom.yaml
+if [ -f addons/cert-manager/selfsigned-ca-custom.yaml ]; then
+    rm addons/cert-manager/selfsigned-ca-custom.yaml
 fi
 cert_name="test321-com"
 org_name="soft"
 domain_name="test321.com"
 info "create selfsigned-cert.custom.yaml"
-cat >./addons/cert-manager/selfsigned-ca.custom.yaml <<EOF
+cat >addons/cert-manager/selfsigned-ca-custom.yaml <<EOF
 ---
 # 创建自签名发行者
 apiVersion: cert-manager.io/v1
@@ -110,11 +109,11 @@ spec:
   ca:
     secretName: ca-$cert_name-tls
 EOF
-cd ..
 info "deploy  selfsigned-ca"
-kubectl apply -f ./addons/cert-manager/selfsigned-ca.custom.yaml
+
+kubectl apply -f addons/cert-manager/selfsigned-ca-custom.yaml
 
 info "Test that the certificate"
 openssl x509 -in <(kubectl -n cert-manager get secret \
-  ca-$cert_name-tls -o jsonpath='{.data.tls\.crt}' | base64 -d) \
-  -text -noout
+    ca-$cert_name-tls -o jsonpath='{.data.tls\.crt}' | base64 -d) \
+    -text -noout
