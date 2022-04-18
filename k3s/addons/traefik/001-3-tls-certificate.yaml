@@ -3,25 +3,26 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: traefik-app-cert 
+  name: traefik-tls-cert
   # 需要使用证书的应用所在的命名空间
   namespace: traefik
 spec:
-  secretName: traefik-app-tls
+  secretName: traefik-tls-secret
   duration: 2160h # 90d
   renewBefore: 360h # 15d
   subject:
     organizations:
-    - soft Inc.
-  commonName: traefik.test321.com
+      - soft Inc.
+  commonName: dashboard.tra.com
   isCA: false
   privateKey:
     algorithm: RSA
     encoding: PKCS1
     size: 2048
   dnsNames:
-  - traefik.test321.com
+    - dashboard.tra.com
+    - dashboard.traefik.com
   issuerRef:
-    name: ca-issuer #使用 CA Issuer
-    kind: ClusterIssuer ### CA Issuer是ClusterIssuer
+    name: selfsigned-issuer
+    kind: ClusterIssuer
     group: cert-manager.io

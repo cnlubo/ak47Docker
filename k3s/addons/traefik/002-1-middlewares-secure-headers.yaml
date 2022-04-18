@@ -3,7 +3,7 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
   name: traefik-secure-headers
-  namespace: kube-system
+  namespace: traefik
 spec:
   headers:
     # CSP Headers
@@ -31,5 +31,5 @@ spec:
     # X-Frame-Options: DENY
     frameDeny: true
     # Referrer-Policy: same-origin
-    referrerPolicy: 'same-origin'
+    referrerPolicy: "same-origin"
     sslRedirect: true

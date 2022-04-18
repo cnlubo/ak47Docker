@@ -1,32 +1,42 @@
 #!/bin/bash
-###
-# @Author: cnak47
-# @Date: 2022-01-17 13:57:59
-# @LastEditors: cnak47
-# @LastEditTime: 2022-04-09 17:47:21
-# @FilePath: /docker_workspace/ak47Docker/k3s/2-0-deploy-k3s.sh
-# @Description:
+###---------------------------------------------------------------------------
+# Author: cnak47
+# Date: 2022-04-09 16:56:18
+# LastEditors: cnak47
+# LastEditTime: 2022-04-18 10:11:12
+# FilePath: /docker_workspace/ak47Docker/k3s/2-0-deploy-k3s.sh
+# Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
-###
-set -e
-GREEN='\033[0;32m'
-LB='\033[1;34m' # light blue
-NC='\033[0m'    # No Color
+###----------------------------------------------------------------------------
 
-k8sversion=1.23.5
+set -e
+MODULE="$(basename $0)"
+# dirname $0，取得当前执行的脚本文件的父目录
+# cd `dirname $0`，进入这个目录(切换当前工作目录)
+# pwd，显示当前工作目录(cd执行后的)
+parentdir=$(dirname "$0")
+ScriptPath=$(cd "${parentdir:?}" && pwd)
+# BASH_SOURCE[0] 等价于 BASH_SOURCE,取得当前执行的shell文件所在的路径及文件名
+scriptdir=$(dirname "${BASH_SOURCE[0]}")
+#加载配置内容
+# shellcheck disable=SC1090
+source "$ScriptPath"/include/color.sh
+# shellcheck disable=SC1090
+source "$ScriptPath"/include/common.sh
+SOURCE_SCRIPT "${scriptdir:?}"/options.conf
+
 read -p "Which k8s version do you want to use? check https://github.com/k3s-io/k3s/releases (default:$k8sversion) promt with [ENTER]:" inputK8Sversion
 k8sversion="${inputK8Sversion:-$k8sversion}"
 echo "$k8sversion" >k8sversion
 K3S_VERSION="v$(cat k8sversion)+k3s1"
 echo "version" "$K3S_VERSION"
 rm k8sversion
+WARNING_MSG "$MODULE" "############################################################################"
+WARNING_MSG "$MODULE" "Now deploying k3s on multipass VMs"
+WARNING_MSG "$MODULE" "############################################################################"
 
-echo "############################################################################"
-echo "Now deploying k3s on multipass VMs"
-echo "############################################################################"
-
-echo -e "[${LB}Info${NC}] deploy k3s on k3s-master"
+INFO_MSG "$MODULE" "deploy k3s on k3s-master"
 # disable traefik servicelb
 # multipass exec k3s-master -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_CHANNEL=latest INSTALL_K3S_MIRROR=cn K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--disable=servicelb,traefik"  sh -" ｜grep -w "Using"
 multipass exec k3s-master -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_VERSION=${K3S_VERSION} INSTALL_K3S_MIRROR=cn K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--disable=servicelb,traefik"  sh -" ｜grep -w "Using"
@@ -36,42 +46,38 @@ K3S_NODEIP_MASTER="https://$(multipass info k3s-master | grep "IPv4" | awk -F' '
 # Get the TOKEN from the master node
 K3S_TOKEN="$(multipass exec k3s-master -- /bin/bash -c "sudo cat /var/lib/rancher/k3s/server/node-token")"
 # Deploy k3s on the worker nodes
-
 WORKERS=$(echo $(multipass list | grep worker | awk '{print $1}'))
 for WORKER in ${WORKERS}; do
-    echo -e "[${LB}Info${NC}] deploy k3s on ${WORKER}"
+    INFO_MSG "$MODULE" "deploy k3s on ${WORKER}"
     #multipass exec ${WORKER} -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_CHANNEL=latest INSTALL_K3S_MIRROR=cn K3S_TOKEN=${K3S_TOKEN} K3S_URL=${K3S_NODEIP_MASTER} sh -" | grep -w "Using"
     multipass exec "${WORKER}" -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_VERSION=${K3S_VERSION} INSTALL_K3S_MIRROR=cn K3S_TOKEN=${K3S_TOKEN} K3S_URL=${K3S_NODEIP_MASTER} sh -" | grep -w "Using"
 done
 sleep 10
 
-echo "############################################################################"
-echo exporting KUBECONFIG file from master node
+INFO_MSG "$MODULE" "############################################################################"
+INFO_MSG "$MODULE" "exporting KUBECONFIG file from master node"
 multipass exec k3s-master -- bash -c 'sudo cat /etc/rancher/k3s/k3s.yaml' >k3s.yaml
 sed -i'.back' -e 's/127.0.0.1/k3s-master/g' k3s.yaml
-#export KUBECONFIG=$(pwd)/k3s.yaml && echo -e "[${LB}Info${NC}] setting KUBECONFIG=${KUBECONFIG}"
 cp ~/.kube/config ~/.kube/config_bak
 cp $(pwd)/k3s.yaml ~/.kube/config
 kubectl config rename-context default k3s-multipass
-echo -e "[${LB}Info${NC}] tainting master node: k3s-master"
+INFO_MSG "$MODULE" "tainting master node: k3s-master"
 # 设置污点默认情况下master节点将不会调度运行Pod
 kubectl taint node k3s-master node-role.kubernetes.io/master=effect:NoSchedule
-
 sleep 3
 # worker 设置node 标签
 # 设置Label
 # kubectl label node node1 node-role.kubernetes.io/node=
 # 移除Label
 #kubectl label node node1 node-role.kubernetes.io/node-
-for WORKER in ${WORKERS}; do kubectl label node ${WORKER} node-role.kubernetes.io/k3s-node= >/dev/null && echo -e "[${LB}Info${NC}] label ${WORKER} with node"; done
-
+for WORKER in ${WORKERS}; do
+    kubectl label node ${WORKER} node-role.kubernetes.io/k3s-node= >/dev/null
+    INFO_MSG "$MODULE" "label ${WORKER} with node"
+done
 sleep 10
-
 kubectl get nodes
-
-echo "are the nodes ready?"
-echo "if you face problems, please open an issue on github"
-
-echo "############################################################################"
-echo -e "[${GREEN}Success k3s deployment rolled out${NC}]"
-echo "############################################################################"
+WARNING_MSG "$MODULE" "are the nodes ready?"
+WARNING_MSG "$MODULE" "if you face problems, please open an issue on github"
+SUCCESS_MSG "$MODULE" "############################################################################"
+SUCCESS_MSG "$MODULE" "Success k3s deployment rolled out"
+SUCCESS_MSG "$MODULE" "############################################################################"

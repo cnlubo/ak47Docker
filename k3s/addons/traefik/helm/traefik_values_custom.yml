@@ -9,12 +9,13 @@ deployment:
   kind: Deployment
   # Number of pods of the deployment (only applies when kind == Deployment)
   replicas: 2
-
-additionalArguments:
-  - "--serversTransport.insecureSkipVerify=true"
-  - "--api.insecure=true"
-  # - "--api.dashboard=false"
-
+additionalArguments: []
+# additionalArguments:
+#   - "--serversTransport.insecureSkipVerify=true"
+#   - "--api.insecure=true"
+ingressRoute:
+  dashboard:
+    enabled: false
 ports:
   traefik:
     port: 9000
@@ -39,7 +40,7 @@ ports:
     # Port Redirections
     # Added in 2.2, you can make permanent redirects via entrypoints.
     # https://docs.traefik.io/routing/entrypoints/#redirection
-    # redirectTo: websecure
+    redirectTo: websecure
   websecure:
     port: 8443
     # hostPort: 8443
@@ -56,14 +57,6 @@ ports:
     # https://doc.traefik.io/traefik/routing/entrypoints/#tls
     tls:
       enabled: true
-      # this is the name of a TLSOption definition
-      options: ""
-      certResolver: ""
-      domains: []
-      # - main: example.com
-      #   sans:
-      #     - foo.example.com
-      #     - bar.example.com
   metrics:
     port: 9100
     # hostPort: 9100
@@ -73,7 +66,7 @@ ports:
     # You may not want to expose the metrics port on production deployments.
     # If you want to access it from outside of your cluster,
     # use `kubectl port-forward` or create a secure ingress
-    expose: false
+    expose: true
     # The exposed port for this service
     exposedPort: 9100
     # The port protocol (TCP/UDP)
@@ -90,10 +83,24 @@ ports:
 #     curvePreferences:
 #       - CurveP521
 #       - CurveP384
-tlsOptions: {}
-
+# tlsOptions: {}
+tlsOptions:
+  default:
+    minVersion: VersionTLS13
 # Options for the main traefik service, where the entrypoints traffic comes
 # from.
 service:
   enabled: true
   type: LoadBalancer
+
+logs:
+  # Traefik logs concern everything that happens to Traefik itself (startup, configuration, events, shutdown, and so on).
+  general:
+    # By default, the logs use a text format (common), but you can
+    # also ask for the json format in the format option
+    # format: json
+    # By default, the level is set to ERROR. Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO.
+    level: DEBUG
+  access:
+    # To enable access logs
+    enabled: false
