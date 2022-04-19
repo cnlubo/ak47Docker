@@ -2,9 +2,9 @@
 ###---------------------------------------------------------------------------
 # Author: cnak47
 # Date: 2022-04-11 15:58:31
-# LastEditors: cnak47
-# LastEditTime: 2022-04-17 10:50:43
-# FilePath: /docker_workspace/ak47Docker/k3s/4-0-deploy-cert-manager.sh
+#LastEditors: cnak47
+#LastEditTime: 2022-04-19 09:41:39
+#FilePath: /ak47Docker/k3s/4-0-deploy-cert-manager.sh
 # Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
@@ -44,6 +44,6 @@ if [ ! -f /usr/local/bin/kubectl-cert_manager ]; then
     tar xzf kubectl-cert-manager.tar.gz
     sudo mv kubectl-cert_manager /usr/local/bin
 fi
-sleep 15
+sleep 20
 INFO_MSG "$MODULE" "Check cert-manager Status"
 kubectl cert-manager check api

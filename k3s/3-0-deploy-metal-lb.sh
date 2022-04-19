@@ -2,9 +2,9 @@
 ###---------------------------------------------------------------------------
 # Author: cnak47
 # Date: 2022-04-12 09:40:46
-# LastEditors: cnak47
-# LastEditTime: 2022-04-18 10:20:41
-# FilePath: /docker_workspace/ak47Docker/k3s/3-0-deploy-metal-lb.sh
+#LastEditors: cnak47
+#LastEditTime: 2022-04-19 09:21:47
+#FilePath: /ak47Docker/k3s/3-0-deploy-metal-lb.sh
 # Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.

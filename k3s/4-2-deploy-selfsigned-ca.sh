@@ -2,9 +2,9 @@
 ###---------------------------------------------------------------------------
 # Author: cnak47
 # Date: 2022-04-15 11:15:49
-# LastEditors: cnak47
-# LastEditTime: 2022-04-18 10:33:58
-# FilePath: /docker_workspace/ak47Docker/k3s/4-2-deploy-selfsigned-ca.sh
+#LastEditors: cnak47
+#LastEditTime: 2022-04-19 09:47:23
+#FilePath: /ak47Docker/k3s/4-2-deploy-selfsigned-ca.sh
 # Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
@@ -41,6 +41,8 @@ spec:
   selfSigned: {}
 ---
 # 生成CA证书
+# 参考：https://cert-manager.io/docs/usage/certificate/
+# api参考：https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1alpha3.Certificate
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:

@@ -2,9 +2,9 @@
 ###---------------------------------------------------------------------------
 # Author: cnak47
 # Date: 2022-04-16 23:21:13
-# LastEditors: cnak47
-# LastEditTime: 2022-04-17 10:16:31
-# FilePath: /docker_workspace/ak47Docker/k3s/include/common.sh
+#LastEditors: cnak47
+#LastEditTime: 2022-04-19 10:07:12
+#FilePath: /ak47Docker/k3s/include/common.sh
 # Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
@@ -13,12 +13,10 @@ EXIT_SCRIPT() {
     kill -s TERM "$TOP_PID"
 }
 
-# EXIT_MSG() {
-#     ExitMsg="$1"
-#     # echo -e "${CFAILURE}$(date +%Y-%m-%d-%H:%M) -Error $ExitMsg " |tee -a ${ErrLog:?} && exit 1
-#     echo -e "${CFAILURE}$(date +%Y-%m-%d-%H:%M) -Error $ExitMsg "
-#     exit 1
-# }
+EXIT_MSG() {
+    log "${1}" "${CFAILURE}Error ${CEND} ==> ${CBOLD}${CRED}${2}${CEND}"
+    exit 1
+}
 
 stderr_print() {
     printf "%b\\n" "${*}" >&2

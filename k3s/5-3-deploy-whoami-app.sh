@@ -1,15 +1,14 @@
 #!/bin/bash
 ###---------------------------------------------------------------------------
 #Author: cnak47
-#Date: 2022-04-11 21:33:14
+#Date: 2022-04-13 21:59:12
 #LastEditors: cnak47
-#LastEditTime: 2022-04-19 10:04:50
-#FilePath: /ak47Docker/k3s/3-1-uninstall-metal-lb.sh
-#Description: 
+#LastEditTime: 2022-04-19 16:21:58
+#FilePath: /ak47Docker/k3s/5-3-deploy-whoami-app.sh
+#Description:
 #
-#Copyright (c) 2022 by cnak47, All Rights Reserved. 
+#Copyright (c) 2022 by cnak47, All Rights Reserved.
 ###---------------------------------------------------------------------------
-
 set -e
 MODULE="$(basename $0)"
 # dirname $0，取得当前执行的脚本文件的父目录
@@ -26,17 +25,12 @@ source "$ScriptPath"/include/color.sh
 source "$ScriptPath"/include/common.sh
 SOURCE_SCRIPT "${scriptdir:?}"/options.conf
 
-WARNING_MSG "$MODULE" "############################################################################"
-WARNING_MSG "$MODULE" "Uninstall METALLB v$metallb_version "
-WARNING_MSG "$MODULE" "############################################################################"
-WORKERS=$(echo $(multipass list | grep worker | awk '{print $1}'))
-for WORKER in ${WORKERS}; do
-    INFO_MSG "$MODULE" "delete Label metallb-speaker=true on ${WORKER}"
-    kubectl label nodes "${WORKER}" metallb-speaker-
-done
-sleep 5
-kubectl delete -f addons/metal-lb/$metallb_version/metallb.yaml
+INFO_MSG "$MODULE" "deploy whoami app"
+kubectl apply -f example/whoami/whoami-deploy.yaml
 sleep 10
-kubectl delete -f addons/metal-lb/$metallb_version/namespace.yaml
+INFO_MSG "$MODULE" "deploy whoami app certificate"
+kubectl apply -f example/whoami/whoami-certificate.yaml
+sleep 10
+INFO_MSG "$MODULE" "deploy whoami ingressroute"
+kubectl apply -f example/whoami/whoami-tls-ingressroute.yaml
 sleep 5
-kubectl get pods -A

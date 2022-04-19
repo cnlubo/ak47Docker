@@ -10,9 +10,6 @@ deployment:
   # Number of pods of the deployment (only applies when kind == Deployment)
   replicas: 2
 additionalArguments: []
-# additionalArguments:
-#   - "--serversTransport.insecureSkipVerify=true"
-#   - "--api.insecure=true"
 ingressRoute:
   dashboard:
     enabled: false
@@ -20,13 +17,9 @@ ports:
   traefik:
     port: 9000
     healthchecksPort: 9000
-    # Defines whether the port is exposed if service.type is LoadBalancer or NodePort.
-    # You SHOULD NOT expose the traefik port on production deployments.
-    # If you want to access it from outside of your cluster,
-    # use `kubectl port-forward` or create a secure ingress
     expose: false
     # The exposed port for this service
-    #exposedPort: 9000
+    exposedPort: 9000
     # The port protocol (TCP/UDP)
     protocol: TCP
   web:
@@ -62,37 +55,17 @@ ports:
     # hostPort: 9100
     # Defines whether the port is exposed if service.type is LoadBalancer or
     # NodePort.
-    #
-    # You may not want to expose the metrics port on production deployments.
-    # If you want to access it from outside of your cluster,
-    # use `kubectl port-forward` or create a secure ingress
     expose: true
     # The exposed port for this service
     exposedPort: 9100
     # The port protocol (TCP/UDP)
     protocol: TCP
-
-# TLS Options are created as TLSOption CRDs
-# https://doc.traefik.io/traefik/https/tls/#tls-options
-# Example:
-# tlsOptions:
-#   default:
-#     sniStrict: true
-#     preferServerCipherSuites: true
-#   foobar:
-#     curvePreferences:
-#       - CurveP521
-#       - CurveP384
-# tlsOptions: {}
 tlsOptions:
   default:
     minVersion: VersionTLS13
-# Options for the main traefik service, where the entrypoints traffic comes
-# from.
 service:
   enabled: true
   type: LoadBalancer
-
 logs:
   # Traefik logs concern everything that happens to Traefik itself (startup, configuration, events, shutdown, and so on).
   general:

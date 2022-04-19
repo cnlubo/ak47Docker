@@ -1,0 +1,20 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: whoami-app-route
+  namespace: whoami
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`whoami.test321.com`)
+      kind: Rule
+      # middlewares:
+      #   - name: headers-default
+      #     namespace: traefik
+      services:
+        - name: whoami-service
+          port: 80
+  tls: 
+    secretName: whoami-app-tls
