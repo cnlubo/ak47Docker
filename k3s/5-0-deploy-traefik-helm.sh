@@ -2,9 +2,9 @@
 ###---------------------------------------------------------------------------
 #Author: cnak47
 #Date: 2022-04-19 09:48:38
-#LastEditors: cnak47
-#LastEditTime: 2022-04-19 15:57:20
-#FilePath: /ak47Docker/k3s/5-0-deploy-traefik-helm.sh
+# LastEditors: cnak47
+# LastEditTime: 2022-04-20 11:57:11
+# FilePath: /docker_workspace/ak47Docker/k3s/5-0-deploy-traefik-helm.sh
 #Description:
 #
 #Copyright (c) 2022 by cnak47, All Rights Reserved.
@@ -27,17 +27,17 @@ source "$ScriptPath"/include/common.sh
 SOURCE_SCRIPT "${scriptdir:?}"/options.conf
 
 if [ ! -f "/usr/local/bin/helm" ]; then
-    EXIT_MSG ""$MODULE"" "Please first install Helm !!!"
+  EXIT_MSG ""$MODULE"" "Please first install Helm !!!"
 fi
 if [ -f addons/traefik/traefik_values_custom.yml ]; then
-    rm addons/traefik/traefik_values_custom.yml
+  rm addons/traefik/traefik_values_custom.yml
 fi
 INFO_MSG "$MODULE" "create traefik_values_custom.yml"
 cat >addons/traefik/traefik_values_custom.yml <<EOF
 image:
   name: traefik
   # defaults to appVersion
-  tag: "$traefik_version"
+  tag: "${traefik_version:?}"
   pullPolicy: IfNotPresent
 deployment:
   enabled: true
@@ -56,7 +56,6 @@ ports:
     expose: false
     # The exposed port for this service
     exposedPort: 9000
-    # The port protocol (TCP/UDP)
     protocol: TCP
   web:
     port: 8000
@@ -75,7 +74,6 @@ ports:
     # hostPort: 8443
     expose: true
     exposedPort: 443
-    # The port protocol (TCP/UDP)
     protocol: TCP
     # nodePort: 32443
     # Enable HTTP/3.
@@ -102,6 +100,8 @@ tlsOptions:
 service:
   enabled: true
   type: LoadBalancer
+  spec: 
+    loadBalancerIP: "192.168.64.120"
 logs:
   # Traefik logs concern everything that happens to Traefik itself (startup, configuration, events, shutdown, and so on).
   general:

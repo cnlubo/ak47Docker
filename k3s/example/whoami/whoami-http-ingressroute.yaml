@@ -6,7 +6,7 @@ metadata:
   namespace: whoami
 spec:
   entryPoints:
-    - whoami
+    - web
   routes:
     - match: Host(`whoami.test321.com`)
       kind: Rule

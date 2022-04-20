@@ -9,6 +9,8 @@ spec:
   selfSigned: {}
 ---
 # 生成CA证书
+# 参考：https://cert-manager.io/docs/usage/certificate/
+# api参考：https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1alpha3.Certificate
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:

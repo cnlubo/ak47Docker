@@ -20,7 +20,6 @@ ports:
     expose: false
     # The exposed port for this service
     exposedPort: 9000
-    # The port protocol (TCP/UDP)
     protocol: TCP
   web:
     port: 8000
@@ -39,7 +38,6 @@ ports:
     # hostPort: 8443
     expose: true
     exposedPort: 443
-    # The port protocol (TCP/UDP)
     protocol: TCP
     # nodePort: 32443
     # Enable HTTP/3.
@@ -66,6 +64,8 @@ tlsOptions:
 service:
   enabled: true
   type: LoadBalancer
+  spec: 
+    loadBalancerIP: "192.168.64.120"
 logs:
   # Traefik logs concern everything that happens to Traefik itself (startup, configuration, events, shutdown, and so on).
   general:
