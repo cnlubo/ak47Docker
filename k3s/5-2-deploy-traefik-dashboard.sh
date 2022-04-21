@@ -3,7 +3,7 @@
 #Author: cnak47
 #Date: 2022-04-19 11:37:23
 # LastEditors: cnak47
-# LastEditTime: 2022-04-20 11:59:45
+# LastEditTime: 2022-04-21 17:02:58
 # FilePath: /docker_workspace/ak47Docker/k3s/5-2-deploy-traefik-dashboard.sh
 #Description:
 #
@@ -25,9 +25,9 @@ source "$ScriptPath"/include/color.sh
 source "$ScriptPath"/include/common.sh
 SOURCE_SCRIPT "${scriptdir:?}"/options.conf
 
-if [ -f addons/traefik/traefik_dashboard_custom.yml ]; then
-  rm addons/traefik/traefik_dashboard_custom.yml
-fi
+# if [ -f addons/traefik/traefik_dashboard_custom.yml ]; then
+#   rm addons/traefik/traefik_dashboard_custom.yml
+# fi
 WARNING_MSG "$MODULE" "############################################################################"
 WARNING_MSG "$MODULE" "Deploying traefik v${traefik_version:?} dashboard"
 WARNING_MSG "$MODULE" "############################################################################"
@@ -85,6 +85,8 @@ metadata:
 data:
   users: |2
     YWRtaW46JGFwcjEkQmhuTUNZeUEkRGRkNWFzOW9qdGtUdGttTDlrMTRqLwoK
+EOF
+cat >addons/traefik/traefik_dashboard_middleware.yml <<EOF
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
@@ -96,14 +98,25 @@ spec:
     secret: traefik-basic-auth
 ---
 apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: traefik-redirect-https
+  namespace: traefik
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+EOF
+cat >addons/traefik/traefik_dashboard_route.yml <<EOF
+---
+apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: traefik-dashboard-route
+  name: traefik-dashboard-https-route
   namespace: traefik
 spec:
   entryPoints:
     - websecure
-    - web
   routes:
     - match: Host(\`$dns_name\`)
       kind: Rule
@@ -115,5 +128,27 @@ spec:
           namespace: traefik
   tls: 
     secretName: traefik-tls-secret
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard-http-route
+  namespace: traefik
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(\`$dns_name\`)
+      kind: Rule
+      services:
+        - name: api@internal
+          kind: TraefikService
+      middlewares:
+        - name: traefik-basic-auth
+          namespace: traefik
+        - name: traefik-redirect-https
+          namespace: traefik
 EOF
 kubectl apply -f addons/traefik/traefik_dashboard_custom.yml
+kubectl apply -f addons/traefik/traefik_dashboard_middleware.yml
+kubectl apply -f addons/traefik/traefik_dashboard_route.yml

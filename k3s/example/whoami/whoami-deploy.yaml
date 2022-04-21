@@ -74,7 +74,6 @@ metadata:
 spec:
   selector:
     app: whoami
-  # loadBalancerIP: 192.168.64.120
   type: ClusterIP
   sessionAffinity: None
   sessionAffinityConfig:

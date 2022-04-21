@@ -10,9 +10,9 @@ spec:
   routes:
     - match: Host(`whoami.test321.com`)
       kind: Rule
-      # middlewares:
-      #   - name: headers-default
-      #     namespace: traefik
+      middlewares:
+        - name:  whoami-redirect-https
+          namespace: whoami
       services:
         - name: whoami-service
           port: 80

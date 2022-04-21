@@ -48,33 +48,3 @@ metadata:
 data:
   users: |2
     YWRtaW46JGFwcjEkQmhuTUNZeUEkRGRkNWFzOW9qdGtUdGttTDlrMTRqLwoK
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: traefik-basic-auth
-  namespace: traefik
-spec:
-  basicAuth:
-    secret: traefik-basic-auth
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: traefik-dashboard-route
-  namespace: traefik
-spec:
-  entryPoints:
-    - websecure
-    - web
-  routes:
-    - match: Host(`dashboard.traefik.com`)
-      kind: Rule
-      services:
-        - name: api@internal
-          kind: TraefikService
-      middlewares:
-        - name: traefik-basic-auth
-          namespace: traefik
-  tls: 
-    secretName: traefik-tls-secret
