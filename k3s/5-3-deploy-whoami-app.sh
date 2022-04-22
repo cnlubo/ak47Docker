@@ -2,9 +2,9 @@
 ###---------------------------------------------------------------------------
 #Author: cnak47
 #Date: 2022-04-13 21:59:12
-#LastEditors: cnak47
-#LastEditTime: 2022-04-19 16:21:58
-#FilePath: /ak47Docker/k3s/5-3-deploy-whoami-app.sh
+# LastEditors: cnak47
+# LastEditTime: 2022-04-22 14:34:38
+# FilePath: /docker_workspace/ak47Docker/k3s/5-3-deploy-whoami-app.sh
 #Description:
 #
 #Copyright (c) 2022 by cnak47, All Rights Reserved.
@@ -31,6 +31,9 @@ sleep 10
 INFO_MSG "$MODULE" "deploy whoami app certificate"
 kubectl apply -f example/whoami/whoami-certificate.yaml
 sleep 10
-INFO_MSG "$MODULE" "deploy whoami ingressroute"
-kubectl apply -f example/whoami/whoami-tls-ingressroute.yaml
+INFO_MSG "$MODULE" "deploy whoami app ingressroute"
+kubectl apply -f example/whoami/traefik/whoami-redirect-https.yaml
+kubectl apply -f example/whoami/traefik/whoami-http-ingressroute.yaml
+kubectl apply -f example/whoami/traefik/whoami-https-ingressroute.yaml
+
 sleep 5

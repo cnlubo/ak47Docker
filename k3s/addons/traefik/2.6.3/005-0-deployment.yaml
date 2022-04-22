@@ -26,100 +26,91 @@ spec:
       annotations:
         container.apparmor.security.beta.kubernetes.io/traefik: runtime/default
     spec:
-      serviceAccountName: traefik-ingress-controller
-      securityContext:
-        # Use nogroup (and needs nobody) for the acme.json file
-        # for storing TLS
-        fsGroup: 65534
-      initContainers:
-        - name: volume-permissions
-          image: busybox:1.32
-          command:
-            [
-              "sh",
-              "-c",
-              "touch /etc/traefik/certs/acme.json && chown 65534:65534 /etc/traefik/certs/acme.json && chmod 600 /etc/traefik/certs/acme.json",
-            ]
-          volumeMounts:
-            - name: certificates
-              mountPath: /etc/traefik/certs
+      # serviceAccountName: traefik-ingress-controller
+      # securityContext:
+      #   # Use nogroup (and needs nobody) for the acme.json file
+      #   # for storing TLS
+      #   fsGroup: 65534
       containers:
-        - name: traefik
-          image: traefik:v2.6.3
-          args:
-            - --api.dashboard=true
-            - --ping=true
-            - --accesslog
-            - --entrypoints.traefik.address=:9080
-            - --entrypoints.web.address=:8080
-            - --entrypoints.websecure.address=:8443
-            # Uncomment the below lines to redirect http requests to https.
-            # This specifies the port :443 and not the https entrypoint name for the
-            # redirect as the service is listening on port 443 and directing traffic
-            # to the 8443 target port. If the entrypoint name "websecure" was used,
-            # instead of "to=:443", then the browser would be redirected to port 8443.
-            # - --entrypoints.web.http.redirections.entrypoint.to=:443
-            # - --entrypoints.web.http.redirections.entrypoint.scheme=https
-            - --providers.kubernetescrd
-            - --providers.kubernetescrd.allowCrossNamespace=true
-            - --providers.kubernetesingress
-            # - --certificatesresolvers.godaddy.acme.email=me@mydomain.io
-            # - --providers.kubernetesgateway
-            # - --experimental.kubernetesgateway=true
-            # - --certificatesresolvers.godaddy.acme.storage=/etc/traefik/certs/acme.json
-            # - --certificatesResolvers.godaddy.acme.dnsChallenge.provider=godaddy
-            # - --certificatesResolvers.godaddy.acme.dnsChallenge.delayBeforeCheck=0
-            # Please note that this is the staging Let's Encrypt server.
-            # Once you get things working, you should remove that whole line altogether.
-            # - --certificatesresolvers.godaddy.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
-            - --log
-            - --log.level=INFO
-          securityContext:
-            readOnlyRootFilesystem: true
-            runAsNonRoot: true
-            # Run the container as nobody:nogroup
-            runAsUser: 65534
-            runAsGroup: 65534
-            capabilities:
-              drop:
-                - ALL
-          livenessProbe:
-            failureThreshold: 3
-            httpGet:
-              path: /ping
-              port: 9080
-              scheme: HTTP
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 3
-          resources:
-            limits:
-              memory: "100Mi"
-              cpu: "1000m"
-          ports:
-            # The Traefik container is listening on ports > 1024 so the container
-            # can be run as a non-root user and they can bind to these ports.
-            - name: web
-              containerPort: 8080
-            - name: websecure
-              containerPort: 8443
-            - name: admin
-              containerPort: 9080
-          volumeMounts:
-            - name: certificates
-              mountPath: /etc/traefik/certs
-          # env:
-          #   - name: GODADDY_API_KEY
-          #     valueFrom:
-          #       secretKeyRef:
-          #         name: godaddy
-          #         key: GODADDY_API_KEY
-          #   - name: GODADDY_API_SECRET
-          #     valueFrom:
-          #       secretKeyRef:
-          #         name: godaddy
-          #         key: GODADDY_API_SECRET
+      - args:
+        - --global.checknewversion=false
+        - --global.sendanonymoususage=flase
+        - --entrypoints.metrics.address=:9100/tcp
+        - --entrypoints.traefik.address=:9000/tcp
+        - --entrypoints.web.address=:8000/tcp
+        - --entrypoints.websecure.address=:8443/tcp
+        - --api.dashboard=true
+        - --ping=true
+        - --metrics.prometheus=true
+        - --metrics.prometheus.entrypoint=metrics
+        - --providers.kubernetescrd
+        # IngressRoutes are able to reference resources in other namespaces than theirs.
+        - --providers.kubernetescrd.allowCrossNamespace=true
+        - --providers.kubernetesingress
+        - --entrypoints.websecure.http.tls=true
+        - --log.level=ERROR
+        image: traefik:2.6.3
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /ping
+            port: 9000
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        name: traefik
+        ports:
+          - containerPort: 9100
+            name: metrics
+            protocol: TCP
+          - containerPort: 9000
+            name: traefik
+            protocol: TCP
+          - containerPort: 8000
+            name: web
+            protocol: TCP
+          - containerPort: 8443
+            name: websecure
+            protocol: TCP
+        readinessProbe:
+          failureThreshold: 1
+          httpGet:
+            path: /ping
+            port: 9000
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 3
+        resources: {}
+        securityContext:
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 65532
+          runAsNonRoot: true
+          runAsUser: 65532
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /data
+          name: data
+        - mountPath: /tmp
+          name: tmp
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        fsGroup: 65532  
+      serviceAccount: traefik-ingress-controller
+      serviceAccountName: traefik-ingress-controller
+      terminationGracePeriodSeconds: 60
       volumes:
-        - name: certificates
-          persistentVolumeClaim:
-            claimName: traefik-certs-pvc
+      - emptyDir: {}
+        name: data
+      - emptyDir: {}
+        name: tmp

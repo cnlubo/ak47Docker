@@ -3,7 +3,7 @@
 #Author: cnak47
 #Date: 2022-04-19 11:37:23
 # LastEditors: cnak47
-# LastEditTime: 2022-04-21 17:02:58
+# LastEditTime: 2022-04-22 11:20:56
 # FilePath: /docker_workspace/ak47Docker/k3s/5-2-deploy-traefik-dashboard.sh
 #Description:
 #
@@ -24,10 +24,6 @@ source "$ScriptPath"/include/color.sh
 # shellcheck disable=SC1091
 source "$ScriptPath"/include/common.sh
 SOURCE_SCRIPT "${scriptdir:?}"/options.conf
-
-# if [ -f addons/traefik/traefik_dashboard_custom.yml ]; then
-#   rm addons/traefik/traefik_dashboard_custom.yml
-# fi
 WARNING_MSG "$MODULE" "############################################################################"
 WARNING_MSG "$MODULE" "Deploying traefik v${traefik_version:?} dashboard"
 WARNING_MSG "$MODULE" "############################################################################"

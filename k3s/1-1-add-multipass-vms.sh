@@ -1,14 +1,30 @@
 #!/bin/bash
-###
- # @Author: your name
- # @Date: 2022-01-17 13:57:59
- # @LastEditTime: 2022-01-17 14:05:57
- # @LastEditors: Please set LastEditors
- # @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- # @FilePath: /ak47Docker/k3s/1-add-multipass-vms.sh
-### 
-# check if required applications and files are available
-#./utils/dependency-check.sh
+###---------------------------------------------------------------------------
+# Author: cnak47
+# Date: 2022-04-09 16:56:18
+# LastEditors: cnak47
+# LastEditTime: 2022-04-22 11:12:20
+# FilePath: /docker_workspace/ak47Docker/k3s/1-1-add-multipass-vms.sh
+# Description: 
+# 
+# Copyright (c) 2022 by cnak47, All Rights Reserved. 
+###----------------------------------------------------------------------------
+
+set -e
+MODULE="$(basename $0)"
+# dirname $0，取得当前执行的脚本文件的父目录
+# cd `dirname $0`，进入这个目录(切换当前工作目录)
+# pwd，显示当前工作目录(cd执行后的)
+parentdir=$(dirname "$0")
+ScriptPath=$(cd "${parentdir:?}" && pwd)
+# BASH_SOURCE[0] 等价于 BASH_SOURCE,取得当前执行的shell文件所在的路径及文件名
+scriptdir=$(dirname "${BASH_SOURCE[0]}")
+#加载配置内容
+# shellcheck disable=SC1090
+source "$ScriptPath"/include/color.sh
+# shellcheck disable=SC1090
+source "$ScriptPath"/include/common.sh
+SOURCE_SCRIPT "${scriptdir:?}"/options.conf
 
 nodeCount=1
 read -p "How many worker nodes do you want to add?(default:$nodeCount) promt with [ENTER]:" inputNode
@@ -30,15 +46,15 @@ begin_num=$(($num_Worker + 1))
 end_num=$(($num_Worker + $nodeCount))
 WORKER=$(eval 'echo k3s-worker{'"$begin_num"'..'"$end_num"'}')
 NODES+=$WORKER
-echo $NODES
-echo $cpuCount
-echo $memCount
-echo $diskCount
-echo $OSversion
+# echo $NODES
+# echo $cpuCount
+# echo $memCount
+# echo $diskCount
+# echo $OSversion
 # # Create containers
 for NODE in ${NODES}; do
-    echo "############################################################################"
-    echo "Deploy multipass vm $NODE"
+    INFO_MSG "$MODULE" "############################################################################"
+    INFO_MSG "$MODULE" "Deploy multipass vm $NODE"
     multipass launch --name ${NODE} --cpus ${cpuCount} --mem ${memCount}G --disk ${diskCount}G --cloud-init cloud-config.yaml "$OSversion"
 done
 
