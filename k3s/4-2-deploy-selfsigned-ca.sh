@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-15 11:15:49
 #LastEditors: cnak47
-#LastEditTime: 2022-04-19 09:47:23
+#LastEditTime: 2022-04-23 10:10:07
 #FilePath: /ak47Docker/k3s/4-2-deploy-selfsigned-ca.sh
 # Description:
 #
@@ -26,7 +26,7 @@ source "$ScriptPath"/include/common.sh
 SOURCE_SCRIPT "${scriptdir:?}"/options.conf
 
 if [ -f addons/cert-manager/selfsigned-ca-custom.yaml ]; then
-  rm addons/cert-manager/selfsigned-ca-custom.yaml
+    rm addons/cert-manager/selfsigned-ca-custom.yaml
 fi
 INFO_MSG "$MODULE" "create selfsigned-cert.custom.yaml"
 cat >addons/cert-manager/selfsigned-ca-custom.yaml <<EOF
@@ -85,5 +85,5 @@ kubectl apply -f addons/cert-manager/selfsigned-ca-custom.yaml
 sleep 20
 INFO_MSG "$MODULE" "Test that the certificate"
 openssl x509 -in <(kubectl -n cert-manager get secret \
-  selfsigned-ca-root-secret -o jsonpath='{.data.tls\.crt}' | base64 -d) \
-  -text -noout
+    selfsigned-ca-root-secret -o jsonpath='{.data.tls\.crt}' | base64 -d) \
+    -text -noout

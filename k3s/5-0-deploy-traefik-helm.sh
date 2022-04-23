@@ -2,9 +2,9 @@
 ###---------------------------------------------------------------------------
 #Author: cnak47
 #Date: 2022-04-19 09:48:38
-# LastEditors: cnak47
-# LastEditTime: 2022-04-20 11:57:11
-# FilePath: /docker_workspace/ak47Docker/k3s/5-0-deploy-traefik-helm.sh
+#LastEditors: cnak47
+#LastEditTime: 2022-04-23 10:23:18
+#FilePath: /ak47Docker/k3s/5-0-deploy-traefik-helm.sh
 #Description:
 #
 #Copyright (c) 2022 by cnak47, All Rights Reserved.
@@ -27,10 +27,10 @@ source "$ScriptPath"/include/common.sh
 SOURCE_SCRIPT "${scriptdir:?}"/options.conf
 
 if [ ! -f "/usr/local/bin/helm" ]; then
-  EXIT_MSG ""$MODULE"" "Please first install Helm !!!"
+    EXIT_MSG ""$MODULE"" "Please first install Helm !!!"
 fi
 if [ -f addons/traefik/traefik_values_custom.yml ]; then
-  rm addons/traefik/traefik_values_custom.yml
+    rm addons/traefik/traefik_values_custom.yml
 fi
 INFO_MSG "$MODULE" "create traefik_values_custom.yml"
 cat >addons/traefik/traefik_values_custom.yml <<EOF
