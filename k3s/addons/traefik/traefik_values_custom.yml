@@ -1,3 +1,4 @@
+fullnameOverride: traefik-ingress-controller
 image:
   name: traefik
   # defaults to appVersion
@@ -76,4 +77,4 @@ logs:
     level: DEBUG
   access:
     # To enable access logs
-    enabled: false
+    enabled: true

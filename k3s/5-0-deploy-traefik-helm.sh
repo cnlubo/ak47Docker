@@ -2,9 +2,9 @@
 ###---------------------------------------------------------------------------
 #Author: cnak47
 #Date: 2022-04-19 09:48:38
-#LastEditors: cnak47
-#LastEditTime: 2022-04-23 10:23:18
-#FilePath: /ak47Docker/k3s/5-0-deploy-traefik-helm.sh
+# LastEditors: cnak47
+# LastEditTime: 2022-04-25 14:11:34
+# FilePath: /docker_workspace/ak47Docker/k3s/5-0-deploy-traefik-helm.sh
 #Description:
 #
 #Copyright (c) 2022 by cnak47, All Rights Reserved.
@@ -34,6 +34,7 @@ if [ -f addons/traefik/traefik_values_custom.yml ]; then
 fi
 INFO_MSG "$MODULE" "create traefik_values_custom.yml"
 cat >addons/traefik/traefik_values_custom.yml <<EOF
+fullnameOverride: traefik-ingress-controller
 image:
   name: traefik
   # defaults to appVersion
@@ -112,7 +113,7 @@ logs:
     level: DEBUG
   access:
     # To enable access logs
-    enabled: false
+    enabled: true
 EOF
 WARNING_MSG "$MODULE" " ############################################################################"
 WARNING_MSG "$MODULE" "Deploying traefik v${traefik_version:?}"
