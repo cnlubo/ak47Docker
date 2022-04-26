@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-22 11:43:26
 # LastEditors: cnak47
-# LastEditTime: 2022-04-22 14:54:49
+# LastEditTime: 2022-04-26 14:50:09
 # FilePath: /docker_workspace/ak47Docker/k3s/5-1-deploy-traefik-manual.sh
 # Description:
 #
@@ -26,11 +26,14 @@ source "$ScriptPath"/include/color.sh
 source "$ScriptPath"/include/common.sh
 SOURCE_SCRIPT "${scriptdir:?}"/options.conf
 
-addons_dir=addons/traefik/$traefik_version
+addons_dir=addons/traefik/${traefik_version:?}
+WARNING_MSG "$MODULE" " ############################################################################"
+WARNING_MSG "$MODULE" "Deploying traefik v${traefik_version:?}"
+WARNING_MSG "$MODULE" " ############################################################################"
 
 if [ ! -d "$addons_dir"/crd ]; then
     INFO_MSG "$MODULE" "Download traefik CRD files"
-    mkdir -p $addons_dir/crd
+    mkdir -p "$addons_dir"/crd
     curl https://raw.githubusercontent.com/traefik/traefik/v$traefik_version/docs/content/reference/dynamic-configuration/traefik.containo.us_ingressroutes.yaml \
         -o $addons_dir/crd/01-traefik.containo.us_ingressroutes.yaml
     curl https://raw.githubusercontent.com/traefik/traefik/v$traefik_version/docs/content/reference/dynamic-configuration/traefik.containo.us_ingressroutetcps.yaml \
@@ -50,6 +53,12 @@ if [ ! -d "$addons_dir"/crd ]; then
     curl https://raw.githubusercontent.com/traefik/traefik/v$traefik_version/docs/content/reference/dynamic-configuration/traefik.containo.us_traefikservices.yaml \
         -o $addons_dir/crd/09-traefik.containo.us_traefikservices.yaml
     echo -e "[${GREEN}Download traefik RBAC file${NC}]"
-    curl https://raw.githubusercontent.com/traefik/traefik/v$traefik_version/docs/content/reference/dynamic-configuration/kubernetes-crd-rbac.yml \
-        -o addons/traefik/$traefik_version/001-01-rabc.yaml
 fi
+INFO_MSG "$MODULE" "Deploy traefik yaml "
+kubectl create namespace traefik
+kubectl apply -f "$addons_dir"/crd/
+kubectl apply -f "$addons_dir"/001-1-rbac.yaml
+kubectl apply -f "$addons_dir"/001-2-tls-options.yaml
+kubectl apply -f "$addons_dir"/001-3-sa.yaml
+kubectl apply -f "$addons_dir"/001-4-deployment.yaml
+kubectl apply -f "$addons_dir"/001-5-service.yaml

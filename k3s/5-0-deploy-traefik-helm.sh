@@ -3,7 +3,7 @@
 #Author: cnak47
 #Date: 2022-04-19 09:48:38
 # LastEditors: cnak47
-# LastEditTime: 2022-04-25 14:11:34
+# LastEditTime: 2022-04-26 13:44:16
 # FilePath: /docker_workspace/ak47Docker/k3s/5-0-deploy-traefik-helm.sh
 #Description:
 #
@@ -69,7 +69,7 @@ ports:
     # Port Redirections
     # Added in 2.2, you can make permanent redirects via entrypoints.
     # https://docs.traefik.io/routing/entrypoints/#redirection
-    redirectTo: websecure
+    # redirectTo: websecure
   websecure:
     port: 8443
     # hostPort: 8443
