@@ -18,3 +18,4 @@
 /k3s/k3s.yaml.back
 docker.code-workspace
 workspace.code-workspace
+docker-images/

@@ -37,8 +37,8 @@ WORKERS=$(echo $(multipass list | grep worker | awk '{print $1}'))
 
 for WORKER in ${WORKERS}; do
     INFO_MSG "$MODULE" "deploy images on ${WORKER}"
-    multipass transfer addons/k8s-ingress-nginx/controller-v$k8s_ingress_controller_version/ingress-nginx-controller.tar "${WORKER}":
-    multipass transfer addons/k8s-ingress-nginx/controller-v$k8s_ingress_controller_version/ingress-nginx-kube-webhook-certgen.tar "${WORKER}":
+    multipass transfer docker-images/k8s-ingress-nginx/controller-v$k8s_ingress_controller_version/ingress-nginx-controller.tar "${WORKER}":
+    multipass transfer docker-images/k8s-ingress-nginx/controller-v$k8s_ingress_controller_version/ingress-nginx-kube-webhook-certgen.tar "${WORKER}":
     multipass exec "${WORKER}" -- /bin/bash -c "sudo ctr -n=k8s.io images import ingress-nginx-controller.tar" | grep -w "unpacking"
     multipass exec "${WORKER}" -- /bin/bash -c "sudo ctr -n=k8s.io images import ingress-nginx-kube-webhook-certgen.tar" | grep -w "unpacking"
     multipass exec "${WORKER}" -- /bin/bash -c "sudo crictl images" | grep -w "ingress-nginx"

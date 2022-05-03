@@ -2,9 +2,9 @@
 ###---------------------------------------------------------------------------
 # Author: cnak47
 # Date: 2022-04-09 16:56:18
-#LastEditors: cnak47
-#LastEditTime: 2022-04-19 11:29:03
-#FilePath: /ak47Docker/k3s/2-0-deploy-k3s.sh
+# LastEditors: cnak47
+# LastEditTime: 2022-04-30 21:39:02
+# FilePath: /docker_workspace/ak47Docker/k3s/2-0-deploy-k3s.sh
 # Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
@@ -58,7 +58,11 @@ INFO_MSG "$MODULE" "############################################################
 INFO_MSG "$MODULE" "exporting KUBECONFIG file from master node"
 multipass exec k3s-master -- bash -c 'sudo cat /etc/rancher/k3s/k3s.yaml' >k3s.yaml
 sed -i'.back' -e 's/127.0.0.1/k3s-master/g' k3s.yaml
-cp ~/.kube/config ~/.kube/config_bak
+if [ ! -d /Users/ak47/.kube ]; then
+    mkdir -p /Users/ak47/.kube
+else
+    cp ~/.kube/config ~/.kube/config_bak
+fi
 cp $(pwd)/k3s.yaml ~/.kube/config
 chmod go-r ~/.kube/config
 kubectl config rename-context default k3s-multipass

@@ -1,0 +1,16 @@
+hostname: "rancher.test321.com"
+privateCA: true
+additionalTrustedCAs: false
+ingress:
+  # If set to false, ingress will not be created
+  # Defaults to true
+  # options: true, false
+  enabled: true
+  includeDefaultExtraAnnotations: true
+  extraAnnotations: {}
+  tls:
+    # options: rancher, letsEncrypt, secret
+    source: secret
+    secretName: tls-rancher-ingress
+replicas: 3
+bootstrapPassword: "12345678"
