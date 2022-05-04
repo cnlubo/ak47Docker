@@ -7,10 +7,11 @@ ingress:
   # options: true, false
   enabled: true
   includeDefaultExtraAnnotations: true
-  extraAnnotations: {}
+  extraAnnotations:
+    kubernetes.io/ingress.class: "nginx"
   tls:
     # options: rancher, letsEncrypt, secret
     source: secret
     secretName: tls-rancher-ingress
-replicas: 3
+replicas: 2
 bootstrapPassword: "12345678"

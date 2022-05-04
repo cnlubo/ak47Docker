@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-29 17:02:24
 # LastEditors: cnak47
-# LastEditTime: 2022-05-01 08:30:32
+# LastEditTime: 2022-05-03 17:37:50
 # FilePath: /docker_workspace/ak47Docker/k3s/7-deploy-rancher-on-k3s.sh
 # Description:
 #
@@ -49,20 +49,11 @@ helm install rancher rancher-stable/rancher \
     --namespace cattle-system \
     --values=./addons/rancher/rancher-values-custom.yaml \
     --version "$rancher_version"
-# helm install rancher rancher-latest/rancher \
-#     --namespace cattle-system \
-#     --set hostname=rancher.my.org \
-#     --version $rancher_version
 
 # Wait a few seconds for deployment to be created
 sleep 20
-
 kubectl -n cattle-system rollout status deploy/rancher
-
-# echo "Exposing Rancher deployment with loadbalancer service"
-# kubectl expose deployment rancher --type=LoadBalancer --name=rancher -n cattle-system
-# kubectl get svc rancher -n cattle-system
-
-# echo "############################################################################"
-# echo -e "[${GREEN}Success rancher deployment rolled out${NC}]"
-# echo "############################################################################"
+rm cacerts.pem
+INFO_MSG "$MODULE" "############################################################################"
+INFO_MSG "$MODULE" "[Success rancher deployment rolled out]"
+INFO_MSG "$MODULE" "############################################################################"
