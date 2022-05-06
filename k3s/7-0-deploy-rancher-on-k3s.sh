@@ -3,8 +3,8 @@
 # Author: cnak47
 # Date: 2022-04-29 17:02:24
 # LastEditors: cnak47
-# LastEditTime: 2022-05-03 17:37:50
-# FilePath: /docker_workspace/ak47Docker/k3s/7-deploy-rancher-on-k3s.sh
+# LastEditTime: 2022-05-06 16:37:58
+# FilePath: /docker_workspace/ak47Docker/k3s/7-0-deploy-rancher-on-k3s.sh
 # Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
@@ -30,6 +30,26 @@ SOURCE_SCRIPT "${scriptdir:?}"/options.conf
 WARNING_MSG "$MODULE" "############################################################################"
 WARNING_MSG "$MODULE" "Now deploying Rancher latest in namespace cattle-system"
 WARNING_MSG "$MODULE" "############################################################################"
+
+WORKERS=$(echo $(multipass list | grep worker | awk '{print $1}'))
+
+for WORKER in ${WORKERS}; do
+    INFO_MSG "$MODULE" "deploy rancher images on ${WORKER}"
+    multipass transfer \
+        docker-images/rancher-images/"$rancher_version"/rancher"$rancher_version".tar.gz \
+        "${WORKER}":
+    multipass transfer \
+        docker-images/rancher-images/"$rancher_version"/rancher-webhook-$rancher_webhook_version.tar.gz \
+        "${WORKER}":
+    multipass transfer \
+        docker-images/rancher-images/"$rancher_version"/rancher-shell-$rancher_shell_version.tar.gz \
+        "${WORKER}":
+    multipass exec "${WORKER}" -- /bin/bash -c "sudo ctr -n=k8s.io images import rancher$rancher_version.tar.gz" | grep -w "unpacking"
+    multipass exec "${WORKER}" -- /bin/bash -c "sudo ctr -n=k8s.io images import rancher-webhook-$rancher_webhook_version.tar.gz" | grep -w "unpacking"
+    multipass exec "${WORKER}" -- /bin/bash -c "sudo ctr -n=k8s.io images import rancher-shell-$rancher_shell_version.tar.gz" | grep -w "unpacking"
+    multipass exec "${WORKER}" -- /bin/bash -c "sudo crictl images" | grep -w "rancher"
+done
+sleep 10
 
 kubectl create namespace cattle-system
 INFO_MSG "$MODULE" "Create tls-ca secret"
