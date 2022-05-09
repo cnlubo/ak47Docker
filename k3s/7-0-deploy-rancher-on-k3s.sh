@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-29 17:02:24
 # LastEditors: cnak47
-# LastEditTime: 2022-05-06 16:37:58
+# LastEditTime: 2022-05-07 17:59:25
 # FilePath: /docker_workspace/ak47Docker/k3s/7-0-deploy-rancher-on-k3s.sh
 # Description:
 #
@@ -44,9 +44,13 @@ for WORKER in ${WORKERS}; do
     multipass transfer \
         docker-images/rancher-images/"$rancher_version"/rancher-shell-$rancher_shell_version.tar.gz \
         "${WORKER}":
+    multipass transfer \
+        docker-images/rancher-images/"$rancher_version"/fleet-agent-$fleet_agent_version.tar.gz \
+        "${WORKER}":
     multipass exec "${WORKER}" -- /bin/bash -c "sudo ctr -n=k8s.io images import rancher$rancher_version.tar.gz" | grep -w "unpacking"
     multipass exec "${WORKER}" -- /bin/bash -c "sudo ctr -n=k8s.io images import rancher-webhook-$rancher_webhook_version.tar.gz" | grep -w "unpacking"
     multipass exec "${WORKER}" -- /bin/bash -c "sudo ctr -n=k8s.io images import rancher-shell-$rancher_shell_version.tar.gz" | grep -w "unpacking"
+    multipass exec "${WORKER}" -- /bin/bash -c "sudo ctr -n=k8s.io images import fleet-agent-$fleet_agent_version.tar.gz" | grep -w "unpacking"
     multipass exec "${WORKER}" -- /bin/bash -c "sudo crictl images" | grep -w "rancher"
 done
 sleep 10
