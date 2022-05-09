@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-05-04 22:31:11
 # LastEditors: cnak47
-# LastEditTime: 2022-05-07 16:18:33
+# LastEditTime: 2022-05-09 16:13:09
 # FilePath: /docker_workspace/ak47Docker/k3s/7-2-uninstall-rancher-helm.sh
 # Description:
 #
@@ -17,15 +17,15 @@ api_server="https://k3s-master:6443"
 #K3S_TOKEN="$(multipass exec k3s-master -- /bin/bash -c "sudo cat /var/lib/rancher/k3s/server/node-token")"
 
 # echo "处理删除中断"
-curl -k $api_server/api/v1/namespaces/local/finalize \
-    -H "Authorization: Bearer $token" \
-    -H "Content-Type: application/json" \
-    -XPUT \
-    -d '{"apiVersion":"v1","kind":"Namespace","metadata":{"name":"local"},"spec":{"finalizers":[]}}'
+# curl -k $api_server/api/v1/namespaces/local/finalize \
+#     -H "Authorization: Bearer $token" \
+#     -H "Content-Type: application/json" \
+#     -XPUT \
+#     -d '{"apiVersion":"v1","kind":"Namespace","metadata":{"name":"local"},"spec":{"finalizers":[]}}'
 
-# kubectl patch --type='json' -p='[{"op": "remove", "path": "/metadata/finalizers"}]' ns $(kubectl get ns | egrep 'cattle|fleet|rancher|local|^p-|^user-' | awk '{print $1}')
-# project_ns=$(kubectl get ns | egrep '^p-|local' | awk '{print $1}')
-# project_crd=(clusterroletemplatebindings.management.cattle.io clusteralertgroups.management.cattle.io projects.management.cattle.io projectalertgroups.management.cattle.io projectalertrules.management.cattle.io projectroletemplatebindings.management.cattle.io nodes.management.cattle.io)
+kubectl patch --type='json' -p='[{"op": "remove", "path": "/metadata/finalizers"}]' ns $(kubectl get ns | egrep 'cattle|fleet|rancher|local|^p-|^user-' | awk '{print $1}')
+project_ns=$(kubectl get ns | egrep '^p-|local' | awk '{print $1}')
+project_crd=(clusterroletemplatebindings.management.cattle.io clusteralertgroups.management.cattle.io projects.management.cattle.io projectalertgroups.management.cattle.io projectalertrules.management.cattle.io projectroletemplatebindings.management.cattle.io nodes.management.cattle.io)
 
 # for ns in ${project_ns[@]}; do
 #     for crd in ${project_crd[@]}; do
@@ -52,11 +52,11 @@ crd_list=$(kubectl get crd | grep cattle.io | awk '{print $1}')
 # read anykey
 
 # echo "helm卸载"
-# helm uninstall rancher -n cattle-system
-# helm uninstall rancher-operator -n rancher-operator-system
-# helm uninstall rancher-operator-crd -n rancher-operator-system
-# helm uninstall fleet -n fleet-system
-# helm uninstall fleet-crd -n fleet-system
+helm uninstall fleet -n cattle-fleet-system
+helm uninstall fleet-crd -n cattle-fleet-system
+helm uninstall fleet-agent-local -n cattle-fleet-local-system
+helm uninstall rancher-webhook -n cattle-system
+helm uninstall rancher -n cattle-system
 
 # echo "清理剩余资源"
 # sleep 5
