@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-29 17:02:24
 # LastEditors: cnak47
-# LastEditTime: 2022-05-07 17:59:25
+# LastEditTime: 2022-05-10 14:36:26
 # FilePath: /docker_workspace/ak47Docker/k3s/7-0-deploy-rancher-on-k3s.sh
 # Description:
 #
@@ -28,7 +28,7 @@ SOURCE_SCRIPT "${scriptdir:?}"/options.conf
 # ./utils/dependency-chec-helm.sh
 
 WARNING_MSG "$MODULE" "############################################################################"
-WARNING_MSG "$MODULE" "Now deploying Rancher latest in namespace cattle-system"
+WARNING_MSG "$MODULE" " Now deploying Rancher v$rancher_version in namespace cattle-system"
 WARNING_MSG "$MODULE" "############################################################################"
 
 WORKERS=$(echo $(multipass list | grep worker | awk '{print $1}'))

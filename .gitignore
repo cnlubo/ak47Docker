@@ -19,3 +19,4 @@
 docker.code-workspace
 workspace.code-workspace
 docker-images/
+tmp/
