@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-09 16:56:18
 # LastEditors: cnak47
-# LastEditTime: 2022-04-22 11:12:20
+# LastEditTime: 2022-05-14 21:41:45
 # FilePath: /docker_workspace/ak47Docker/k3s/1-1-add-multipass-vms.sh
 # Description: 
 # 
@@ -46,11 +46,7 @@ begin_num=$(($num_Worker + 1))
 end_num=$(($num_Worker + $nodeCount))
 WORKER=$(eval 'echo k3s-worker{'"$begin_num"'..'"$end_num"'}')
 NODES+=$WORKER
-# echo $NODES
-# echo $cpuCount
-# echo $memCount
-# echo $diskCount
-# echo $OSversion
+
 # # Create containers
 for NODE in ${NODES}; do
     INFO_MSG "$MODULE" "############################################################################"
