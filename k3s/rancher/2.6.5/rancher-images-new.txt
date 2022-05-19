@@ -1,0 +1,9 @@
+rancher/rancher-agent:v2.6.5
+rancher/rancher-runtime:v2.6.5
+rancher/rancher-webhook:v0.2.5
+rancher/rancher:v2.6.5
+rancher/shell:v0.1.16
+rancher/gitjob:v0.1.26
+rancher/fleet-agent:v0.3.9
+rancher/fleet:v0.3.9
+rancher/mirrored-pause:3.6

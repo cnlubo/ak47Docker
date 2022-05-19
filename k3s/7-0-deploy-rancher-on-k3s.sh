@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-29 17:02:24
 # LastEditors: cnak47
-# LastEditTime: 2022-05-10 14:36:26
+# LastEditTime: 2022-05-15 18:33:51
 # FilePath: /docker_workspace/ak47Docker/k3s/7-0-deploy-rancher-on-k3s.sh
 # Description:
 #
@@ -45,12 +45,12 @@ for WORKER in ${WORKERS}; do
         docker-images/rancher-images/"$rancher_version"/rancher-shell-$rancher_shell_version.tar.gz \
         "${WORKER}":
     multipass transfer \
-        docker-images/rancher-images/"$rancher_version"/fleet-agent-$fleet_agent_version.tar.gz \
+        docker-images/rancher-images/"$rancher_version"/rancher-fleet-agent-$fleet_agent_version.tar.gz \
         "${WORKER}":
     multipass exec "${WORKER}" -- /bin/bash -c "sudo ctr -n=k8s.io images import rancher$rancher_version.tar.gz" | grep -w "unpacking"
     multipass exec "${WORKER}" -- /bin/bash -c "sudo ctr -n=k8s.io images import rancher-webhook-$rancher_webhook_version.tar.gz" | grep -w "unpacking"
     multipass exec "${WORKER}" -- /bin/bash -c "sudo ctr -n=k8s.io images import rancher-shell-$rancher_shell_version.tar.gz" | grep -w "unpacking"
-    multipass exec "${WORKER}" -- /bin/bash -c "sudo ctr -n=k8s.io images import fleet-agent-$fleet_agent_version.tar.gz" | grep -w "unpacking"
+    multipass exec "${WORKER}" -- /bin/bash -c "sudo ctr -n=k8s.io images import rancher-fleet-agent-$fleet_agent_version.tar.gz" | grep -w "unpacking"
     multipass exec "${WORKER}" -- /bin/bash -c "sudo crictl images" | grep -w "rancher"
 done
 sleep 10
@@ -63,7 +63,7 @@ fi
 kubectl -n cattle-system create secret generic tls-ca \
     --from-file=cacerts.pem=./cacerts.pem
 INFO_MSG "$MODULE" "Create rancher certificate"
-kubectl apply -f addons/rancher/rancher-certificate.yaml
+kubectl apply -f rancher/rancher-certificate.yaml
 INFO_MSG "$MODULE" "add helm repo"
 helm repo add rancher-stable http://rancher-mirror.oss-cn-beijing.aliyuncs.com/server-charts/stable
 helm repo update
@@ -71,7 +71,7 @@ helm repo list
 INFO_MSG "$MODULE" "helm install rancher "
 helm install rancher rancher-stable/rancher \
     --namespace cattle-system \
-    --values=./addons/rancher/rancher-values-custom.yaml \
+    --values=rancher/"$rancher_version"/rancher-values-custom.yaml \
     --version "$rancher_version"
 
 # Wait a few seconds for deployment to be created
