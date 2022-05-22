@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: openelb-admission-patch
+  namespace: openelb-system
+spec:
+  template:
+    metadata:
+      name: openelb-admission-patch
+    spec:
+      containers:
+      - args:
+        - patch
+        - --webhook-name=openelb-admission
+        - --namespace=$(POD_NAMESPACE)
+        - --patch-mutating=true
+        - --secret-name=openelb-admission
+        - --patch-failure-policy=Fail
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        # If you cannot access "k8s.gcr.io/ingress-nginx/kube-webhook-certgen", you can replace it with "kubespheredev/kube-webhook-certgen"
+        image: k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.1.1
+        imagePullPolicy: IfNotPresent
+        name: patch
+      restartPolicy: OnFailure
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 2000
+      serviceAccountName: openelb-admission
+
