@@ -23,8 +23,8 @@ The image installs the follow softwares from source code:
   <https://github.com/krallin/tini>
 - gosu
 - zsh
-- zlib 1.2.11
-- openssl 1.1.1l
+- zlib 1.2.12
+- openssl 1.1.1q
 - yq
   <https://github.com/mikefarah/yq>
 - wait-for-port
