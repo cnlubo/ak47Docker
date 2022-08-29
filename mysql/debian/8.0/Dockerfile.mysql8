@@ -1,0 +1,28 @@
+FROM cnlubo/basedeb:v1.1
+LABEL maintainer="bolu20080314@gmail.com" \
+    provider="cnak47"
+
+ENV MYSQL_APPHOME="/etc/docker-mysql" \
+    MYSQL_VERSION=8 \
+    MYSQL_USER=mysql
+
+ENV MYSQL_HOME=/var/lib/mysql$MYSQL_VERSION
+#     PG_RUNDIR=/run/postgresql \
+#     PG_LOGDIR=/var/log/postgresql \
+#     PG_CERTDIR=/etc/postgresql/certs
+# ENV PG_BINDIR=/usr/lib/postgresql/${PG_VERSION}/bin \
+#     PG_DATADIR=${PG_HOME}/${PG_VERSION}/main \
+#     PATH=/usr/lib/postgresql/$PG_VERSION/bin:$PATH \
+#     LANG="en_US.UTF-8"
+
+COPY assets/ /
+
+RUN chmod +x /build/*.sh && \
+    /build/prepare.sh && \
+    /build/install.sh && \
+	/build/cleanup.sh
+
+
+
+# Define default command
+#CMD ["/usr/local/bin/zsh"]

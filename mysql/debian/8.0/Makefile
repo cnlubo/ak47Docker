@@ -1,4 +1,4 @@
-IMAGE:=cnlubo/postgresql
+IMAGE:=cnlubo/mysql
 all: build
 
 help:
@@ -7,16 +7,16 @@ help:
 	@echo ""
 	@echo "   1. make build/release   - build image"
 	@echo "   2. make view            - view  image"
-	@echo "   3. make quickstart      - start PostgreSQL"
-	@echo "   4. make Login           - login to PostgreSQL"
-	@echo "   5. make stop            - stop  PostgreSQL"
+	@echo "   3. make quickstart      - start MySQL"
+	@echo "   4. make Login           - login to MySQL"
+	@echo "   5. make stop            - stop  MySQL"
 	@echo "   6. make logs            - view logs"
 	@echo "   7. make purge           - stop and remove the container"
 
 build:
-	@docker build --tag=$(IMAGE) -f Dockerfile.postgres .
+	@docker build --tag=$(IMAGE) -f Dockerfile.mysql5.7 .
 release:
-	@docker build --tag=$(IMAGE):$(shell cat VERSION) -f Dockerfile.postgres .
+	@docker build --tag=$(IMAGE):$(shell cat VERSION) -f Dockerfile.mysql5.7 .
 view:
 	@docker run --rm -it  $(IMAGE):$(shell cat VERSION) bash
 

@@ -8,10 +8,6 @@ ENV MySQL_USER=mysql \
     MySQL_RUNDIR=/run/mysql8 \
     MySQL_LOGDIR=/var/log/mysql8
 
-# ENV PG_BINDIR=/usr/lib/postgresql/${PG_VERSION}/bin \
-#     PG_DATADIR=${PG_HOME}/${PG_VERSION}/main \
-#     PATH=/usr/lib/postgresql/$PG_VERSION/bin:$PATH \
-#     LANG="en_US.UTF-8"
 # add source
 COPY debian.list /etc/apt/sources.list
 
