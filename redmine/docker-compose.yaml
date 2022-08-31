@@ -2,7 +2,7 @@ version: "2"
 
 services:
   postgresql:
-    image: cnlubo/postgresql:12
+    image: cnlubo/postgresql:14
     environment:
       - DB_USER=redmine
       - DB_PASS=password
@@ -12,7 +12,7 @@ services:
 
   redmine:
     build: ./
-    image: sameersbn/redmine:4.1.1-5
+    image: sameersbn/redmine:5.0.2
     depends_on:
       - postgresql
     environment:
