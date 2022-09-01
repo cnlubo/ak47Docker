@@ -3,7 +3,7 @@ version: "3"
 services:
   mysql8.0:
     # 镜像名
-    image: mysql:8.0.25 
+    image: mysql:8.0.30 
     # 容器名(以后的控制都通过这个)
     container_name: mysql8.0
     # 重启策略

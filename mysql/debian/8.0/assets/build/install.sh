@@ -1,10 +1,9 @@
 #!/bin/bash
-#!/bin/bash
 ###---------------------------------------------------------------------------
 # Author: cnak47
 # Date: 2022-08-29 10:18:18
 # LastEditors: cnak47
-# LastEditTime: 2022-08-29 17:02:09
+# LastEditTime: 2022-08-30 14:01:19
 # FilePath: /docker_workspace/ak47Docker/mysql/debian/8.0/assets/build/install.sh
 # Description: 
 # 
