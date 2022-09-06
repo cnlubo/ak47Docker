@@ -1,4 +1,5 @@
 #cloud-config
+
 apt:
   sources_list: | # written by cloud-init custom template
     deb https://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse
@@ -118,14 +119,8 @@ write_files:
       {
        "data-root": "/home/docker",
        "registry-mirrors" : [
-       "https://mirror.ccs.tencentyun.com",
-       "http://registry.docker-cn.com",
-       "http://docker.mirrors.ustc.edu.cn",
+       "https://6klv9rvv.mirror.aliyuncs.com",
        "http://hub-mirror.c.163.com"
-       ],
-       "insecure-registries" : [
-       "registry.docker-cn.com",
-       "docker.mirrors.ustc.edu.cn"
        ]
       }
     path: /etc/docker/daemon.json
@@ -135,6 +130,7 @@ runcmd:
   #   # - sudo curl -L "https://github.com/docker/compose/releases/download/v2.10.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   #   # - sudo chmod +x /usr/local/bin/docker-compose
   - sudo systemctl daemon-reload
+  - sudo systemctl restart docker.service
 # power_state:
 #   mode: reboot
 #   message: Restarting after configuring Ubuntu for Docker and Docker-Compose

@@ -3,8 +3,8 @@
 # Author: cnak47
 # Date: 2022-04-29 17:02:24
 # LastEditors: cnak47
-# LastEditTime: 2022-09-06 17:39:48
-# FilePath: /docker_workspace/ak47Docker/k3s/install-docker-vms.sh
+# LastEditTime: 2022-09-06 22:56:06
+# FilePath: /docker-workspace/ak47Docker/k3s/install-docker-vms.sh
 # Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
@@ -24,7 +24,7 @@ source "$ScriptPath"/include/color.sh
 # shellcheck disable=SC1091
 source "$ScriptPath"/include/common.sh
 SOURCE_SCRIPT "${scriptdir:?}"/options.conf
-install_method="manual"
+install_method="auto"
 INFO_MSG "$MODULE" "Create mup-docker VM "
 cpuCount=2
 memCount=4
@@ -38,8 +38,9 @@ if [ $install_method = "auto" ]; then
         --cpus ${cpuCount} \
         --mem ${memCount}G \
         --disk ${diskCount}G \
+        --mount $dockerdata:"/home/docker" \
         --cloud-init docker-config.yaml \
-        --timeout 1200 \
+        --timeout 600 \
         "$OSversion"
 else
     multipass launch --name mup-docker \
