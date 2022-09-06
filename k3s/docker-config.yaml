@@ -1,9 +1,17 @@
 #cloud-config
-
 apt:
+  sources_list: | # written by cloud-init custom template
+    deb https://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse
+    deb-src https://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse
+    deb https://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse
+    deb-src https://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse
+    deb https://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse
+    deb-src https://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse
+    deb https://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse
+    deb-src https://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse
   sources:
     docker.list:
-      source: deb [arch=amd64] https://download.docker.com/linux/ubuntu $RELEASE stable
+      source: deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $RELEASE stable
       key: |
         -----BEGIN PGP PUBLIC KEY BLOCK-----
 
@@ -67,6 +75,7 @@ apt:
         YT90qFF93M3v01BbxP+EIY2/9tiIPbrd
         =0YYh
         -----END PGP PUBLIC KEY BLOCK-----
+
 package_update: true
 packages:
   - apt-transport-https
@@ -79,11 +88,6 @@ packages:
   - containerd.io
   - avahi-daemon
   - libnss-mdns
-
-runcmd:
-  - sudo curl -L "https://github.com/docker/compose/releases/download/2.0.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  - sudo chmod +x /usr/local/bin/docker-compose
-  - sudo systemctl daemon-reload
 
 # create the docker group
 groups:
@@ -112,12 +116,28 @@ write_files:
     permissions: "0644"
   - content: |
       {
-       "data-root": "/home/docker"
+       "data-root": "/home/docker",
+       "registry-mirrors" : [
+       "https://mirror.ccs.tencentyun.com",
+       "http://registry.docker-cn.com",
+       "http://docker.mirrors.ustc.edu.cn",
+       "http://hub-mirror.c.163.com"
+       ],
+       "insecure-registries" : [
+       "registry.docker-cn.com",
+       "docker.mirrors.ustc.edu.cn"
+       ]
       }
     path: /etc/docker/daemon.json
     owner: root:root
     permissions: "0644"
-
-power_state:
-  mode: reboot
-  message: Restarting after configuring Ubuntu for Docker and Docker-Compose
+runcmd:
+  #   # - sudo curl -L "https://github.com/docker/compose/releases/download/v2.10.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  #   # - sudo chmod +x /usr/local/bin/docker-compose
+  - sudo systemctl daemon-reload
+# power_state:
+#   mode: reboot
+#   message: Restarting after configuring Ubuntu for Docker and Docker-Compose
+bootcmd:
+  - printf "[Resolve]\nDNS=8.8.8.8" > /etc/systemd/resolved.conf
+  - [systemctl, restart, systemd-resolved]
