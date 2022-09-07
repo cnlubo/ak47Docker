@@ -119,8 +119,7 @@ write_files:
       {
        "data-root": "/home/docker",
        "registry-mirrors" : [
-       "https://6klv9rvv.mirror.aliyuncs.com",
-       "http://hub-mirror.c.163.com"
+       "https://6klv9rvv.mirror.aliyuncs.com"
        ]
       }
     path: /etc/docker/daemon.json

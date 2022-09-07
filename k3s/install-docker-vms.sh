@@ -3,8 +3,8 @@
 # Author: cnak47
 # Date: 2022-04-29 17:02:24
 # LastEditors: cnak47
-# LastEditTime: 2022-09-06 22:56:06
-# FilePath: /docker-workspace/ak47Docker/k3s/install-docker-vms.sh
+# LastEditTime: 2022-09-07 13:56:21
+# FilePath: /docker_workspace/ak47Docker/k3s/install-docker-vms.sh
 # Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
@@ -24,7 +24,7 @@ source "$ScriptPath"/include/color.sh
 # shellcheck disable=SC1091
 source "$ScriptPath"/include/common.sh
 SOURCE_SCRIPT "${scriptdir:?}"/options.conf
-install_method="auto"
+install_method="manual"
 INFO_MSG "$MODULE" "Create mup-docker VM "
 cpuCount=2
 memCount=4
@@ -38,21 +38,34 @@ if [ $install_method = "auto" ]; then
         --cpus ${cpuCount} \
         --mem ${memCount}G \
         --disk ${diskCount}G \
-        --mount $dockerdata:"/home/docker" \
         --cloud-init docker-config.yaml \
         --timeout 600 \
         "$OSversion"
+    sleep 10
+    multipass mount $dockerdata mup-docker:"/home/docker" -u 501:0
 else
     multipass launch --name mup-docker \
         --cpus ${cpuCount} \
         --mem ${memCount}G \
         --disk ${diskCount}G \
-        --mount $dockerdata:"/home/docker" \
         --cloud-init docker-config-manual.yaml \
-        --timeout 1200 \
+        --timeout 600 \
         "$OSversion"
+    # 离线安装包下载地址
+    # https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/
+    sleep 10
+    multipass mount $dockerdata mup-docker:"/home/docker" -u 501:0
+    multipass transfer soft/docker-20.10.17_3/*.deb mup-docker:"/home/ubuntu"
+    multipass transfer soft/docker-20.10.17_3/daemon.json mup-docker:"/home/ubuntu"
+    multipass transfer soft/docker-20.10.17_3/overwrite.conf mup-docker:"/home/ubuntu"
+    multipass exec -d "/home/ubuntu" mup-docker -- bash -c 'sudo dpkg -i containerd.io_1.6.8-1_amd64.deb'
+    multipass exec -d "/home/ubuntu" mup-docker -- bash -c 'sudo dpkg -i docker-ce-cli_20.10.17_3-0_ubuntu-focal_amd64.deb'
+    multipass exec -d "/home/ubuntu" mup-docker -- bash -c 'sudo dpkg -i docker-ce_20.10.17_3-0_ubuntu-focal_amd64.deb'
+    multipass exec -d "/home/ubuntu" mup-docker -- bash -c 'sudo mv daemon.json /etc/docker/ && sudo chmod +0644 /etc/docker/daemon.json'
+    multipass exec -d "/home/ubuntu" mup-docker -- bash -c 'sudo mkdir -p /lib/systemd/system/docker.service.d/ && sudo mv overwrite.conf /lib/systemd/system/docker.service.d/ && sudo chmod +0644 /lib/systemd/system/docker.service.d/overwrite.conf'
+    multipass exec -d "/home/ubuntu" mup-docker -- bash -c 'sudo systemctl daemon-reload && sudo systemctl restart docker.service'
 fi
 sleep 10
-multipass ls
 INFO_MSG "$MODULE" "Please add below line to .zshrc"
 INFO_MSG "$MODULE" 'export DOCKER_HOST="tcp://mup-docker.local:2375'
+docker version
