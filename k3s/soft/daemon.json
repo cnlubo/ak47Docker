@@ -1,0 +1,6 @@
+{
+    "data-root": "/home/docker",
+    "registry-mirrors": [
+        "https://6klv9rvv.mirror.aliyuncs.com"
+    ]
+}

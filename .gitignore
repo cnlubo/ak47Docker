@@ -20,4 +20,4 @@ docker.code-workspace
 workspace.code-workspace
 docker-images/
 tmp/
-/k3s/soft/
+/k3s/soft/docker/
