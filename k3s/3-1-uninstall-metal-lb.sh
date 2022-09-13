@@ -2,9 +2,9 @@
 ###---------------------------------------------------------------------------
 #Author: cnak47
 #Date: 2022-04-11 21:33:14
-#LastEditors: cnak47
-#LastEditTime: 2022-04-19 10:04:50
-#FilePath: /ak47Docker/k3s/3-1-uninstall-metal-lb.sh
+# LastEditors: cnak47
+# LastEditTime: 2022-09-13 22:58:45
+# FilePath: /docker-workspace/ak47Docker/k3s/3-1-uninstall-metal-lb.sh
 #Description: 
 #
 #Copyright (c) 2022 by cnak47, All Rights Reserved. 
@@ -34,9 +34,10 @@ for WORKER in ${WORKERS}; do
     INFO_MSG "$MODULE" "delete Label metallb-speaker=true on ${WORKER}"
     kubectl label nodes "${WORKER}" metallb-speaker-
 done
-sleep 5
-kubectl delete -f addons/metal-lb/$metallb_version/metallb.yaml
+# sleep 5
+# kubectl delete -f addons/metal-lb/$metallb_version/metallb.yaml
+# sleep 10
+# kubectl delete -f addons/metal-lb/$metallb_version/namespace.yaml
+kubectl delete -f addons/metal-lb/$metallb_version/metallb-native.yaml
 sleep 10
-kubectl delete -f addons/metal-lb/$metallb_version/namespace.yaml
-sleep 5
 kubectl get pods -A
