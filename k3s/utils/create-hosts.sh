@@ -1,4 +1,15 @@
 #!/bin/bash
+#!/bin/bash
+###---------------------------------------------------------------------------
+# Author: cnak47
+# Date: 2022-04-29 17:02:24
+# LastEditors: cnak47
+# LastEditTime: 2022-09-13 15:07:48
+# FilePath: /docker_workspace/ak47Docker/k3s/utils/create-hosts.sh
+# Description: 
+# 
+# Copyright (c) 2022 by cnak47, All Rights Reserved. 
+###----------------------------------------------------------------------------
 
 MASTER=$(echo $(multipass list | grep master | awk '{print $1}'))
 WORKERS=$(echo $(multipass list | grep worker | awk '{print $1}'))
@@ -37,7 +48,7 @@ do
   echo "####### multipass hosts start ##########" >> ${f}
 
   for NODE in ${NODES}; do
-    multipass exec ${NODE} -- bash -c 'echo `ip -4 addr show enp0s2 | grep -oP "(?<=inet ).*(?=/)"` `echo $(hostname)`' >> ${f}
+    multipass exec ${NODE} -- bash -c 'echo `ip -4 addr show ens3 | grep -oP "(?<=inet ).*(?=/)"` `echo $(hostname)`' >> ${f}
   done
 
   echo "####### multipass hosts end   ##########" >> ${f}

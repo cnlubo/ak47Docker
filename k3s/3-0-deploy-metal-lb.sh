@@ -2,9 +2,9 @@
 ###---------------------------------------------------------------------------
 # Author: cnak47
 # Date: 2022-04-12 09:40:46
-#LastEditors: cnak47
-#LastEditTime: 2022-04-19 09:21:47
-#FilePath: /ak47Docker/k3s/3-0-deploy-metal-lb.sh
+# LastEditors: cnak47
+# LastEditTime: 2022-09-13 15:59:28
+# FilePath: /docker_workspace/ak47Docker/k3s/3-0-deploy-metal-lb.sh
 # Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
@@ -30,10 +30,13 @@ WARNING_MSG "$MODULE" " ########################################################
 
 if [ ! -d addons/metal-lb/"${metallb_version:?}" ]; then
     mkdir -p addons/metal-lb/"$metallb_version"
-    wget https://raw.githubusercontent.com/metallb/metallb/v$metallb_version/manifests/namespace.yaml \
-        -O addons/metal-lb/$metallb_version/namespace.yaml
-    wget https://raw.githubusercontent.com/metallb/metallb/v$metallb_version/manifests/metallb.yaml \
-        -O addons/metal-lb/$metallb_version/metallb.yaml
+    # wget https://raw.githubusercontent.com/metallb/metallb/v$metallb_version/manifests/namespace.yaml \
+    #    -O addons/metal-lb/$metallb_version/namespace.yaml
+    # wget https://raw.githubusercontent.com/metallb/metallb/v$metallb_version/manifests/metallb.yaml \
+    #    -O addons/metal-lb/$metallb_version/metallb.yaml
+
+    wget https://raw.githubusercontent.com/metallb/metallb/v$metallb_version/config/manifests/metallb-native.yaml \
+        -O addons/metal-lb/$metallb_version/metallb-native.yaml
 fi
 
 WORKERS=$(echo $(multipass list | grep worker | awk '{print $1}'))
@@ -41,10 +44,11 @@ for WORKER in ${WORKERS}; do
     INFO_MSG "$MODULE" "set Label metallb-speaker on ${WORKER}"
     kubectl label --overwrite nodes ${WORKER} metallb-speaker=true
 done
-INFO_MSG "$MODULE" "namespace.yaml"
-kubectl apply -f addons/metal-lb/$metallb_version/namespace.yaml
-INFO_MSG "$MODULE" "meltallb.yaml"
-kubectl apply -f addons/metal-lb/$metallb_version/metallb.yaml
+# INFO_MSG "$MODULE" "namespace.yaml"
+# kubectl apply -f addons/metal-lb/$metallb_version/namespace.yaml
+# INFO_MSG "$MODULE" "meltallb.yaml"
+# kubectl apply -f addons/metal-lb/$metallb_version/metallb.yaml
+kubectl apply -f addons/metal-lb/$metallb_version/metallb-native.yaml
 INFO_MSG "$MODULE" "Create secret memberList"
 kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 INFO_MSG "$MODULE" "Create secret memberList"
