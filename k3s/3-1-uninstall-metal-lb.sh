@@ -3,8 +3,13 @@
 #Author: cnak47
 #Date: 2022-04-11 21:33:14
 # LastEditors: cnak47
+<<<<<<< HEAD
 # LastEditTime: 2022-09-13 18:14:55
 # FilePath: /docker_workspace/ak47Docker/k3s/3-1-uninstall-metal-lb.sh
+=======
+# LastEditTime: 2022-09-13 22:58:45
+# FilePath: /docker-workspace/ak47Docker/k3s/3-1-uninstall-metal-lb.sh
+>>>>>>> ce0c28a8490ab3f936ee47b8495de35c0022c43e
 #Description: 
 #
 #Copyright (c) 2022 by cnak47, All Rights Reserved. 
@@ -36,9 +41,16 @@ for WORKER in ${WORKERS}; do
 done
 # sleep 5
 # kubectl delete -f addons/metal-lb/$metallb_version/metallb.yaml
+<<<<<<< HEAD
 sleep 10
 # kubectl delete -f addons/metal-lb/$metallb_version/namespace.yaml
 kubectl delete -f addons/metal-lb/$metallb_version/metallb-native.yaml
 
 sleep 5
+=======
+# sleep 10
+# kubectl delete -f addons/metal-lb/$metallb_version/namespace.yaml
+kubectl delete -f addons/metal-lb/$metallb_version/metallb-native.yaml
+sleep 10
+>>>>>>> ce0c28a8490ab3f936ee47b8495de35c0022c43e
 kubectl get pods -A

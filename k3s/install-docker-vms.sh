@@ -3,8 +3,8 @@
 # Author: cnak47
 # Date: 2022-04-29 17:02:24
 # LastEditors: cnak47
-# LastEditTime: 2022-09-13 11:16:35
-# FilePath: /docker_workspace/ak47Docker/k3s/install-docker-vms.sh
+# LastEditTime: 2022-09-13 22:25:59
+# FilePath: /docker-workspace/ak47Docker/k3s/install-docker-vms.sh
 # Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
@@ -29,10 +29,10 @@ INFO_MSG "$MODULE" "Create mup-docker VM "
 cpuCount=2
 memCount=4
 diskCount=10
-dockerdata="/Users/ak47/workspace/docker-workspace/dockerdata"
-if [ ! -d $dockerdata ]; then
-    mkdir -p $dockerdata
-fi
+# dockerdata="/Users/ak47/workspace/docker-workspace/dockerdata"
+# if [ ! -d $dockerdata ]; then
+#     mkdir -p $dockerdata
+# fi
 if [ $install_method = "auto" ]; then
     multipass launch --name mup-docker \
         --cpus ${cpuCount} \
@@ -42,7 +42,7 @@ if [ $install_method = "auto" ]; then
         --timeout 600 \
         "$OSversion"
     sleep 10
-    multipass mount $dockerdata mup-docker:"/home/docker" -u 501:0
+    # multipass mount $dockerdata mup-docker:"/home/docker" -u 501:0
 else
     multipass launch --name mup-docker \
         --cpus ${cpuCount} \
@@ -52,11 +52,11 @@ else
         --timeout 600 \
         --bridged \
         "$OSversion"
-        
+
     # 离线安装包下载地址
     # https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/
     sleep 10
-   # multipass mount $dockerdata mup-docker:"/home/docker" -u 501:0
+    # multipass mount $dockerdata mup-docker:"/home/docker" -u 501:0
     multipass transfer soft/docker/20.10.18_3/*.deb mup-docker:"/home/ubuntu"
     multipass transfer soft/docker/daemon.json mup-docker:"/home/ubuntu"
     multipass transfer soft/docker/overwrite.conf mup-docker:"/home/ubuntu"
