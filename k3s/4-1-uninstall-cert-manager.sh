@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-12 11:29:53
 # LastEditors: cnak47
-# LastEditTime: 2022-04-18 10:30:34
+# LastEditTime: 2022-09-14 15:42:52
 # FilePath: /docker_workspace/ak47Docker/k3s/4-1-uninstall-cert-manager.sh
 # Description:
 #
@@ -28,5 +28,4 @@ SOURCE_SCRIPT "${scriptdir:?}"/options.conf
 INFO_MSG "$MODULE" "Uninstall cert-manager $certmanager_version"
 kubectl delete -f addons/cert-manager/$certmanager_version/cert-manager.yaml
 sleep 15
-kubectl delete namespace cert-manager
 SUCCESS_MSG "$MODULE" "Uninstall cert-manager $certmanager_version Successful"

@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-12 09:40:46
 # LastEditors: cnak47
-# LastEditTime: 2022-09-13 15:59:28
+# LastEditTime: 2022-09-14 17:13:29
 # FilePath: /docker_workspace/ak47Docker/k3s/3-0-deploy-metal-lb.sh
 # Description:
 #
@@ -30,11 +30,6 @@ WARNING_MSG "$MODULE" " ########################################################
 
 if [ ! -d addons/metal-lb/"${metallb_version:?}" ]; then
     mkdir -p addons/metal-lb/"$metallb_version"
-    # wget https://raw.githubusercontent.com/metallb/metallb/v$metallb_version/manifests/namespace.yaml \
-    #    -O addons/metal-lb/$metallb_version/namespace.yaml
-    # wget https://raw.githubusercontent.com/metallb/metallb/v$metallb_version/manifests/metallb.yaml \
-    #    -O addons/metal-lb/$metallb_version/metallb.yaml
-
     wget https://raw.githubusercontent.com/metallb/metallb/v$metallb_version/config/manifests/metallb-native.yaml \
         -O addons/metal-lb/$metallb_version/metallb-native.yaml
 fi
@@ -44,18 +39,13 @@ for WORKER in ${WORKERS}; do
     INFO_MSG "$MODULE" "set Label metallb-speaker on ${WORKER}"
     kubectl label --overwrite nodes ${WORKER} metallb-speaker=true
 done
-# INFO_MSG "$MODULE" "namespace.yaml"
-# kubectl apply -f addons/metal-lb/$metallb_version/namespace.yaml
-# INFO_MSG "$MODULE" "meltallb.yaml"
-# kubectl apply -f addons/metal-lb/$metallb_version/metallb.yaml
 kubectl apply -f addons/metal-lb/$metallb_version/metallb-native.yaml
-INFO_MSG "$MODULE" "Create secret memberList"
-kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
-INFO_MSG "$MODULE" "Create secret memberList"
-kubectl create -f addons/metal-lb/metal-lb-layer2-config.yaml
-
+# INFO_MSG "$MODULE" "Create secret memberList"
+# kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+# INFO_MSG "$MODULE" "Create secret memberList"
+sleep 20
+kubectl create -f addons/metal-lb/$metallb_version/metal-lb-layer2-config.yaml
 sleep 10
-
 kubectl get pods -n metallb-system
 
 WARNING_MSG "$MODULE" "are the nodes ready?"

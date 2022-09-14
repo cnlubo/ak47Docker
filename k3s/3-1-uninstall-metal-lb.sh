@@ -1,20 +1,14 @@
 #!/bin/bash
 ###---------------------------------------------------------------------------
-#Author: cnak47
-#Date: 2022-04-11 21:33:14
+# Author: cnak47
+# Date: 2022-09-14 11:57:47
 # LastEditors: cnak47
-<<<<<<< HEAD
-# LastEditTime: 2022-09-13 18:14:55
+# LastEditTime: 2022-09-14 18:05:00
 # FilePath: /docker_workspace/ak47Docker/k3s/3-1-uninstall-metal-lb.sh
-=======
-# LastEditTime: 2022-09-13 22:58:45
-# FilePath: /docker-workspace/ak47Docker/k3s/3-1-uninstall-metal-lb.sh
->>>>>>> ce0c28a8490ab3f936ee47b8495de35c0022c43e
-#Description: 
-#
-#Copyright (c) 2022 by cnak47, All Rights Reserved. 
-###---------------------------------------------------------------------------
-
+# Description: 
+# 
+# Copyright (c) 2022 by cnak47, All Rights Reserved. 
+###----------------------------------------------------------------------------
 set -e
 MODULE="$(basename $0)"
 # dirname $0，取得当前执行的脚本文件的父目录
@@ -39,18 +33,7 @@ for WORKER in ${WORKERS}; do
     INFO_MSG "$MODULE" "delete Label metallb-speaker=true on ${WORKER}"
     kubectl label nodes "${WORKER}" metallb-speaker-
 done
-# sleep 5
-# kubectl delete -f addons/metal-lb/$metallb_version/metallb.yaml
-<<<<<<< HEAD
-sleep 10
-# kubectl delete -f addons/metal-lb/$metallb_version/namespace.yaml
-kubectl delete -f addons/metal-lb/$metallb_version/metallb-native.yaml
-
-sleep 5
-=======
-# sleep 10
-# kubectl delete -f addons/metal-lb/$metallb_version/namespace.yaml
+kubectl delete -f addons/metal-lb/$metallb_version/metal-lb-layer2-config.yaml
 kubectl delete -f addons/metal-lb/$metallb_version/metallb-native.yaml
 sleep 10
->>>>>>> ce0c28a8490ab3f936ee47b8495de35c0022c43e
 kubectl get pods -A
