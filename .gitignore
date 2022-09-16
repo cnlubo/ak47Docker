@@ -21,3 +21,4 @@ workspace.code-workspace
 docker-images/
 tmp/
 /k3s/soft/docker/
+certs/
