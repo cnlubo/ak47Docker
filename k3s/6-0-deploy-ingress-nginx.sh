@@ -3,8 +3,8 @@
 # Author: cnak47
 # Date: 2021-12-30 23:07:02
 # LastEditors: cnak47
-# LastEditTime: 2022-09-13 23:22:01
-# FilePath: /docker-workspace/ak47Docker/k3s/6-0-deploy-ingress-nginx.sh
+# LastEditTime: 2022-09-16 13:22:52
+# FilePath: /docker_workspace/ak47Docker/k3s/6-0-deploy-ingress-nginx.sh
 # Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.

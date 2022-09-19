@@ -2,9 +2,9 @@
 ###---------------------------------------------------------------------------
 # Author: cnak47
 # Date: 2022-04-16 23:21:13
-#LastEditors: cnak47
-#LastEditTime: 2022-04-19 10:07:12
-#FilePath: /ak47Docker/k3s/include/common.sh
+# LastEditors: cnak47
+# LastEditTime: 2022-09-19 11:25:57
+# FilePath: /docker_workspace/ak47Docker/k3s/include/common.sh
 # Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
@@ -176,4 +176,10 @@ system_check() {
 
     [[ "$OS" == '' ]] && echo "${CWARNING}[Error] Your system is not supported this script${CEND}" && exit
     [ ${RamTotal:?} -lt '1000' ] && echo -e "${CWARNING}[Error] Not enough memory install.\nThis script need memory more than 1G.\n${CEND}" && exit
+}
+
+get_latest_release() {
+    curl --silent "https://api.github.com/repos/$1/releases/latest" | # Get latest release from GitHub api
+        grep '"tag_name":' |                                          # Get tag line
+        sed -E 's/.*"([^"]+)".*/\1/'                                  # Pluck JSON value
 }
