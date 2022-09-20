@@ -3,11 +3,11 @@
 # Author: cnak47
 # Date: 2022-04-09 16:56:18
 # LastEditors: cnak47
-# LastEditTime: 2022-05-14 21:41:45
+# LastEditTime: 2022-09-20 13:36:52
 # FilePath: /docker_workspace/ak47Docker/k3s/1-1-add-multipass-vms.sh
-# Description: 
-# 
-# Copyright (c) 2022 by cnak47, All Rights Reserved. 
+# Description:
+#
+# Copyright (c) 2022 by cnak47, All Rights Reserved.
 ###----------------------------------------------------------------------------
 
 set -e
@@ -29,16 +29,15 @@ SOURCE_SCRIPT "${scriptdir:?}"/options.conf
 nodeCount=1
 read -p "How many worker nodes do you want to add?(default:$nodeCount) promt with [ENTER]:" inputNode
 nodeCount="${inputNode:-$nodeCount}"
-cpuCount=4
+cpuCount=2
 read -p "How many cpus do you want per node?(default:$cpuCount) promt with [ENTER]:" inputCpu
 cpuCount="${inputCpu:-$cpuCount}"
-memCount=2
+memCount=4
 read -p "How many gigabyte memory do you want per node?(default:$memCount) promt with [ENTER]:" inputMem
 memCount="${inputMem:-$memCount}"
-diskCount=5
+diskCount=10
 read -p "How many gigabyte diskspace do you want per node?(default:$diskCount) promt with [ENTER]:" inputDisk
 diskCount="${inputDisk:-$diskCount}"
-OSversion=18.04
 read -p "Which Ubuntu version do you want to use? check multipass find (default:$OSversion) promt with [ENTER]:" inputOSversion
 OSversion="${inputOSversion:-$OSversion}"
 num_Worker=$(multipass list | grep worker | wc -l)
@@ -51,10 +50,11 @@ NODES+=$WORKER
 for NODE in ${NODES}; do
     INFO_MSG "$MODULE" "############################################################################"
     INFO_MSG "$MODULE" "Deploy multipass vm $NODE"
-    multipass launch --name ${NODE} --cpus ${cpuCount} --mem ${memCount}G --disk ${diskCount}G --cloud-init cloud-config.yaml "$OSversion"
+    multipass launch --name ${NODE} --cpus ${cpuCount} \
+        --mem ${memCount}G --disk ${diskCount}G --bridged \
+        --cloud-init cloud-config.yaml "$OSversion"
 done
 
-# Wait a few seconds for nodes to be up
 sleep 10
 
 for NODE in ${NODES}; do

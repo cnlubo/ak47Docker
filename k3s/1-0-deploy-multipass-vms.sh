@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-09 16:56:18
 # LastEditors: cnak47
-# LastEditTime: 2022-09-15 16:35:41
+# LastEditTime: 2022-09-20 14:55:54
 # FilePath: /docker_workspace/ak47Docker/k3s/1-0-deploy-multipass-vms.sh
 # Description:
 #
@@ -49,10 +49,10 @@ NODES+=$WORKER
 # Create containers
 for NODE in ${NODES}; do
     multipass launch --name ${NODE} --cpus ${cpuCount} \
-        --mem ${memCount}G --disk ${diskCount}G --bridged \
+        --mem ${memCount}G --disk ${diskCount}G \
         --cloud-init cloud-config.yaml "$OSversion"
 done
-
+# --bridged
 # Wait a few seconds for nodes to be up
 sleep 5
 
