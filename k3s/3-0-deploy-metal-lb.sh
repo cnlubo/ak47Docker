@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-12 09:40:46
 # LastEditors: cnak47
-# LastEditTime: 2022-09-14 17:13:29
+# LastEditTime: 2022-09-21 17:52:32
 # FilePath: /docker_workspace/ak47Docker/k3s/3-0-deploy-metal-lb.sh
 # Description:
 #
@@ -44,8 +44,8 @@ kubectl apply -f addons/metal-lb/$metallb_version/metallb-native.yaml
 # kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 # INFO_MSG "$MODULE" "Create secret memberList"
 sleep 20
-kubectl create -f addons/metal-lb/$metallb_version/metal-lb-layer2-config.yaml
-sleep 10
+# kubectl create -f addons/metal-lb/$metallb_version/metal-lb-layer2-config.yaml
+#sleep 10
 kubectl get pods -n metallb-system
 
 WARNING_MSG "$MODULE" "are the nodes ready?"

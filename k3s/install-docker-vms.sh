@@ -3,8 +3,8 @@
 # Author: cnak47
 # Date: 2022-04-29 17:02:24
 # LastEditors: cnak47
-# LastEditTime: 2022-09-13 22:25:59
-# FilePath: /docker-workspace/ak47Docker/k3s/install-docker-vms.sh
+# LastEditTime: 2022-09-21 11:32:27
+# FilePath: /docker_workspace/ak47Docker/k3s/install-docker-vms.sh
 # Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
@@ -50,9 +50,8 @@ else
         --disk ${diskCount}G \
         --cloud-init docker-config-manual.yaml \
         --timeout 600 \
-        --bridged \
         "$OSversion"
-
+# --bridged \
     # 离线安装包下载地址
     # https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/
     sleep 10

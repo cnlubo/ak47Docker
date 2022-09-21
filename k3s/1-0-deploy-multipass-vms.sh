@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-09 16:56:18
 # LastEditors: cnak47
-# LastEditTime: 2022-09-20 14:55:54
+# LastEditTime: 2022-09-21 17:28:51
 # FilePath: /docker_workspace/ak47Docker/k3s/1-0-deploy-multipass-vms.sh
 # Description:
 #
