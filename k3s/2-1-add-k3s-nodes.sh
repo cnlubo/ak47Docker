@@ -2,15 +2,15 @@
 ###---------------------------------------------------------------------------
 #Author: cnak47
 #Date: 2022-01-17 13:57:59
-#LastEditors: cnak47
-#LastEditTime: 2022-04-19 09:13:10
-#FilePath: /ak47Docker/k3s/2-1-add-k3s-nodes.sh
+# LastEditors: cnak47
+# LastEditTime: 2022-09-21 18:09:50
+# FilePath: /docker_workspace/ak47Docker/k3s/2-1-add-k3s-nodes.sh
 #Description:
 #
 #Copyright (c) 2022 by cnak47, All Rights Reserved.
 ###---------------------------------------------------------------------------
 
-set -e
+set -ex
 MODULE="$(basename $0)"
 # dirname $0，取得当前执行的脚本文件的父目录
 # cd `dirname $0`，进入这个目录(切换当前工作目录)
@@ -38,6 +38,7 @@ K3S_NODEIP_MASTER="https://$(multipass info k3s-master | grep "IPv4" | awk -F' '
 # Get the TOKEN from the master node
 K3S_TOKEN="$(multipass exec k3s-master -- /bin/bash -c "sudo cat /var/lib/rancher/k3s/server/node-token")"
 # Deploy k3s on the worker nodes
+echo $K3S_TOKEN
 multipass exec "${K3sNode}" -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_VERSION=${K3S_VERSION} INSTALL_K3S_MIRROR=cn K3S_TOKEN=${K3S_TOKEN} K3S_URL=${K3S_NODEIP_MASTER} sh -" | grep -w "Using"
 #multipass exec "${K3sNode}" -- /bin/bash -c "curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_CHANNEL=latest INSTALL_K3S_MIRROR=cn K3S_TOKEN=${K3S_TOKEN} K3S_URL=${K3S_NODEIP_MASTER} sh -" | grep -w "Using"
 sleep 10

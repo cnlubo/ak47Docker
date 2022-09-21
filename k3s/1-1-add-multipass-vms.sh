@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-09 16:56:18
 # LastEditors: cnak47
-# LastEditTime: 2022-09-20 13:36:52
+# LastEditTime: 2022-09-21 18:04:16
 # FilePath: /docker_workspace/ak47Docker/k3s/1-1-add-multipass-vms.sh
 # Description:
 #
@@ -46,12 +46,11 @@ end_num=$(($num_Worker + $nodeCount))
 WORKER=$(eval 'echo k3s-worker{'"$begin_num"'..'"$end_num"'}')
 NODES+=$WORKER
 
-# # Create containers
 for NODE in ${NODES}; do
     INFO_MSG "$MODULE" "############################################################################"
     INFO_MSG "$MODULE" "Deploy multipass vm $NODE"
     multipass launch --name ${NODE} --cpus ${cpuCount} \
-        --mem ${memCount}G --disk ${diskCount}G --bridged \
+        --mem ${memCount}G --disk ${diskCount}G \
         --cloud-init cloud-config.yaml "$OSversion"
 done
 
