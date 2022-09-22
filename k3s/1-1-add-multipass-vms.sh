@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-09 16:56:18
 # LastEditors: cnak47
-# LastEditTime: 2022-09-21 18:04:16
+# LastEditTime: 2022-09-22 11:05:59
 # FilePath: /docker_workspace/ak47Docker/k3s/1-1-add-multipass-vms.sh
 # Description:
 #
@@ -44,9 +44,9 @@ num_Worker=$(multipass list | grep worker | wc -l)
 begin_num=$(($num_Worker + 1))
 end_num=$(($num_Worker + $nodeCount))
 WORKER=$(eval 'echo k3s-worker{'"$begin_num"'..'"$end_num"'}')
-NODES+=$WORKER
+INCREASED_NODES+=$WORKER
 
-for NODE in ${NODES}; do
+for NODE in ${INCREASED_NODES}; do
     INFO_MSG "$MODULE" "############################################################################"
     INFO_MSG "$MODULE" "Deploy multipass vm $NODE"
     multipass launch --name ${NODE} --cpus ${cpuCount} \
@@ -56,8 +56,35 @@ done
 
 sleep 10
 
-for NODE in ${NODES}; do
+for NODE in ${INCREASED_NODES}; do
     multipass transfer ~/.ssh/id_rsa.pub ${NODE}:
     multipass exec ${NODE} -- sudo iptables -P FORWARD ACCEPT
     multipass exec ${NODE} -- bash -c 'sudo cat /home/ubuntu/id_rsa.pub >> /home/ubuntu/.ssh/authorized_keys'
 done
+
+# create hosts files for multipass vms and cluster access with local environment
+./utils/create-hosts.sh
+
+INFO_MSG "$MODULE" "We need to write the host entries on your local machine to /etc/hosts"
+WARNING_MSG "$MODULE" "Please provide your sudo password:"
+sudo cp hosts.local /etc/hosts
+
+INFO_MSG "$MODULE" "############################################################################"
+INFO_MSG "$MODULE" "Writing multipass host entries to /etc/hosts on the VMs:"
+MASTER=$(echo $(multipass list | grep master | awk '{print $1}'))
+WORKERS=$(echo $(multipass list | grep worker | awk '{print $1}'))
+NODES+=$MASTER
+NODES+=" "
+NODES+=$WORKERS
+
+for NODE in ${NODES}; do
+    multipass transfer hosts.vm ${NODE}:
+    multipass transfer ~/.ssh/id_rsa.pub ${NODE}:
+    multipass exec ${NODE} -- sudo iptables -P FORWARD ACCEPT
+    multipass exec ${NODE} -- bash -c 'sudo cat /home/ubuntu/id_rsa.pub >> /home/ubuntu/.ssh/authorized_keys'
+    multipass exec ${NODE} -- bash -c 'sudo chown ubuntu:ubuntu /etc/hosts'
+    multipass exec ${NODE} -- bash -c 'sudo cat /home/ubuntu/hosts.vm >> /etc/hosts'
+done
+
+# cleanup tmp hostfiles
+rm hosts.vm

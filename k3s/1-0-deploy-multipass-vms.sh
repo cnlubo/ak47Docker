@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-09 16:56:18
 # LastEditors: cnak47
-# LastEditTime: 2022-09-21 17:28:51
+# LastEditTime: 2022-09-22 17:43:08
 # FilePath: /docker_workspace/ak47Docker/k3s/1-0-deploy-multipass-vms.sh
 # Description:
 #
@@ -26,39 +26,37 @@ source "$ScriptPath"/include/common.sh
 SOURCE_SCRIPT "${scriptdir:?}"/options.conf
 
 nodeCount=3
-read -p "How many worker nodes do you want?(default:$nodeCount) promt with [ENTER]:" inputNode
+read -r -p "How many worker nodes do you want?(default:$nodeCount) promt with [ENTER]:" inputNode
 nodeCount="${inputNode:-$nodeCount}"
 cpuCount=2
-read -p "How many cpus do you want per node?(default:$cpuCount) promt with [ENTER]:" inputCpu
+read -r -p "How many cpus do you want per node?(default:$cpuCount) promt with [ENTER]:" inputCpu
 cpuCount="${inputCpu:-$cpuCount}"
 memCount=4
-read -p "How many gigabyte memory do you want per node?(default:$memCount) promt with [ENTER]:" inputMem
+read -r -p "How many gigabyte memory do you want per node?(default:$memCount) promt with [ENTER]:" inputMem
 memCount="${inputMem:-$memCount}"
 diskCount=10
-read -p "How many gigabyte diskspace do you want per node?(default:$diskCount) promt with [ENTER]:" inputDisk
+read -r -p "How many gigabyte diskspace do you want per node?(default:$diskCount) promt with [ENTER]:" inputDisk
 diskCount="${inputDisk:-$diskCount}"
-read -p "Which Ubuntu version do you want to use? check multipass find (default:$OSversion) promt with [ENTER]:" inputOSversion
+read -r -p "Which Ubuntu version do you want to use? check multipass find (default:$OSversion) promt with [ENTER]:" inputOSversion
 OSversion="${inputOSversion:-$OSversion}"
 
-MASTER=$(echo "k3s-master ")
+# MASTER=$(echo "k3s-master ")
+MASTER="k3s-master "
 WORKER=$(eval 'echo k3s-worker{1..'"$nodeCount"'}')
 
 NODES+=$MASTER
 NODES+=$WORKER
 
-# Create containers
 for NODE in ${NODES}; do
-    multipass launch --name ${NODE} --cpus ${cpuCount} \
-        --mem ${memCount}G --disk ${diskCount}G \
+    multipass launch --name "${NODE}" --cpus "${cpuCount}" \
+        --mem "${memCount}"G --disk "${diskCount}"G \
         --cloud-init cloud-config.yaml "$OSversion"
 done
 # --bridged
 # Wait a few seconds for nodes to be up
 sleep 5
-
-# # create hosts files for multipass vms and cluster access with local environment
+# create hosts files for multipass vms and cluster access with local environment
 ./utils/create-hosts.sh
-
 INFO_MSG "$MODULE" "We need to write the host entries on your local machine to /etc/hosts"
 WARNING_MSG "$MODULE" "Please provide your sudo password:"
 sudo cp hosts.local /etc/hosts
@@ -67,12 +65,12 @@ INFO_MSG "$MODULE" "############################################################
 INFO_MSG "$MODULE" "Writing multipass host entries to /etc/hosts on the VMs:"
 
 for NODE in ${NODES}; do
-    multipass transfer hosts.vm ${NODE}:
-    multipass transfer ~/.ssh/id_rsa.pub ${NODE}:
-    multipass exec ${NODE} -- sudo iptables -P FORWARD ACCEPT
-    multipass exec ${NODE} -- bash -c 'sudo cat /home/ubuntu/id_rsa.pub >> /home/ubuntu/.ssh/authorized_keys'
-    multipass exec ${NODE} -- bash -c 'sudo chown ubuntu:ubuntu /etc/hosts'
-    multipass exec ${NODE} -- bash -c 'sudo cat /home/ubuntu/hosts.vm >> /etc/hosts'
+    multipass transfer hosts.vm "${NODE}":
+    multipass transfer ~/.ssh/id_rsa.pub "${NODE}":
+    multipass exec "${NODE}" -- sudo iptables -P FORWARD ACCEPT
+    multipass exec "${NODE}" -- bash -c 'sudo cat /home/ubuntu/id_rsa.pub >> /home/ubuntu/.ssh/authorized_keys'
+    multipass exec "${NODE}" -- bash -c 'sudo chown ubuntu:ubuntu /etc/hosts'
+    multipass exec "${NODE}" -- bash -c 'sudo cat /home/ubuntu/hosts.vm >> /etc/hosts'
 done
 
 # cleanup tmp hostfiles

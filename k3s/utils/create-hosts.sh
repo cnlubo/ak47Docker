@@ -4,7 +4,7 @@
 # Author: cnak47
 # Date: 2022-04-29 17:02:24
 # LastEditors: cnak47
-# LastEditTime: 2022-09-21 11:27:50
+# LastEditTime: 2022-09-22 17:42:15
 # FilePath: /docker_workspace/ak47Docker/k3s/utils/create-hosts.sh
 # Description: 
 # 
@@ -19,7 +19,6 @@ NODES+=$WORKERS
 
 cp /etc/hosts hosts.backup
 cp /etc/hosts hosts.local
-rm hosts.cleanup.backup
 
 # make new hosts file for multipase vms
 touch hosts.vm
@@ -48,7 +47,7 @@ do
   echo "####### multipass hosts start ##########" >> ${f}
 
   for NODE in ${NODES}; do
-    multipass exec ${NODE} -- bash -c 'echo `ip -4 addr show ens3 | grep -oP "(?<=inet ).*(?=/)"` `echo $(hostname)`' >> ${f}
+    multipass exec "${NODE}" -- bash -c 'echo `ip -4 addr show ens3 | grep -oP "(?<=inet ).*(?=/)"` `echo $(hostname)`' >> "${f}"
   done
 
   echo "####### multipass hosts end   ##########" >> ${f}
