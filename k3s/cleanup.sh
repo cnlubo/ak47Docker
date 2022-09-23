@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-29 17:02:24
 # LastEditors: cnak47
-# LastEditTime: 2022-04-30 21:54:06
+# LastEditTime: 2022-09-23 10:14:11
 # FilePath: /docker_workspace/ak47Docker/k3s/cleanup.sh
 # Description:
 #
@@ -73,4 +73,4 @@ WARNING_MSG "$MODULE" "[FINISHED]"
 WARNING_MSG "$MODULE" "############################################################################"
 WARNING_MSG "$MODULE" "[Please cleanup the host entries in your /etc/hosts manually"
 
-rm hosts.local hosts.backup k3s.yaml.back k3s.yaml get_helm.sh 2>/dev/null
+rm hosts.local hosts.backup hosts.cleanup.backup k3s.yaml.back k3s.yaml get_helm.sh 2>/dev/null
