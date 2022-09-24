@@ -24,4 +24,4 @@ tmp/
 certs/
 /k3s/hosts.vm
 k3s/hosts.cleanup.backup
-/containerd/config.tmpl
+/k3s/containerd/config.tmpl
