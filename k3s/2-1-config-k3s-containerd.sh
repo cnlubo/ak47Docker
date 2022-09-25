@@ -3,8 +3,8 @@
 # Author: cnak47
 # Date: 2022-09-23 15:39:48
 # LastEditors: cnak47
-# LastEditTime: 2022-09-23 17:31:45
-# FilePath: /docker_workspace/ak47Docker/k3s/2-3-config-k3s-containerd.sh
+# LastEditTime: 2022-09-25 12:12:00
+# FilePath: /docker-workspace/ak47Docker/k3s/2-1-config-k3s-containerd.sh
 # Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
@@ -46,3 +46,4 @@ for WORKER in ${WORKERS}; do
     multipass exec "${WORKER}" -- bash -c "sudo systemctl restart k3s-agent"
     sleep 5
 done
+# sudo  crictl info |grep -5 mirrors
