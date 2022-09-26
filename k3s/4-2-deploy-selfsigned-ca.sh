@@ -2,15 +2,15 @@
 ###---------------------------------------------------------------------------
 # Author: cnak47
 # Date: 2022-04-15 11:15:49
-#LastEditors: cnak47
-#LastEditTime: 2022-04-23 10:10:07
-#FilePath: /ak47Docker/k3s/4-2-deploy-selfsigned-ca.sh
+# LastEditors: cnak47
+# LastEditTime: 2022-09-26 11:29:22
+# FilePath: /docker_workspace/ak47Docker/k3s/4-2-deploy-selfsigned-ca.sh
 # Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
 ###----------------------------------------------------------------------------
 set -e
-MODULE="$(basename $0)"
+MODULE=$(basename "$0")
 # dirname $0，取得当前执行的脚本文件的父目录
 # cd `dirname $0`，进入这个目录(切换当前工作目录)
 # pwd，显示当前工作目录(cd执行后的)
@@ -26,7 +26,7 @@ source "$ScriptPath"/include/common.sh
 SOURCE_SCRIPT "${scriptdir:?}"/options.conf
 
 if [ -f addons/cert-manager/selfsigned-ca-custom.yaml ]; then
-    rm addons/cert-manager/selfsigned-ca-custom.yaml
+  rm addons/cert-manager/selfsigned-ca-custom.yaml
 fi
 INFO_MSG "$MODULE" "create selfsigned-cert.custom.yaml"
 cat >addons/cert-manager/selfsigned-ca-custom.yaml <<EOF
@@ -85,5 +85,5 @@ kubectl apply -f addons/cert-manager/selfsigned-ca-custom.yaml
 sleep 20
 INFO_MSG "$MODULE" "Test that the certificate"
 openssl x509 -in <(kubectl -n cert-manager get secret \
-    selfsigned-ca-root-secret -o jsonpath='{.data.tls\.crt}' | base64 -d) \
-    -text -noout
+  selfsigned-ca-root-secret -o jsonpath='{.data.tls\.crt}' | base64 -d) \
+  -text -noout

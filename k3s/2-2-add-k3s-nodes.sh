@@ -3,14 +3,14 @@
 #Author: cnak47
 #Date: 2022-01-17 13:57:59
 # LastEditors: cnak47
-# LastEditTime: 2022-09-23 16:06:11
-# FilePath: /docker_workspace/ak47Docker/k3s/2-1-add-k3s-nodes.sh
+# LastEditTime: 2022-09-26 11:16:09
+# FilePath: /docker_workspace/ak47Docker/k3s/2-2-add-k3s-nodes.sh
 #Description:
 #
 #Copyright (c) 2022 by cnak47, All Rights Reserved.
 ###---------------------------------------------------------------------------
 set -e
-MODULE="$(basename $0)"
+MODULE=$(basename "$0")
 # dirname $0，取得当前执行的脚本文件的父目录
 # cd `dirname $0`，进入这个目录(切换当前工作目录)
 # pwd，显示当前工作目录(cd执行后的)
@@ -25,9 +25,8 @@ source "$ScriptPath"/include/color.sh
 source "$ScriptPath"/include/common.sh
 SOURCE_SCRIPT "${scriptdir:?}"/options.conf
 
-K3S_VERSION="v$k8sversion+k3s1"
-#echo "version" "$K3S_VERSION"
-read -p "Which multipass node do you want to join k3s cluster promt with [ENTER]:" inputK3sNode
+K3S_VERSION="v${k8sversion:?}+k3s1"
+read -r -p "Which multipass node do you want to join k3s cluster promt with [ENTER]:" inputK3sNode
 K3sNode="${inputK3sNode}"
 WARNING_MSG "$MODULE" "############################################################################"
 WARNING_MSG "$MODULE" "Now deploying k3s $K3S_VERSION on $K3sNode"
@@ -47,7 +46,7 @@ sleep 10
 #kubectl label node node1 node-role.kubernetes.io/node-
 kubectl label node "${K3sNode}" node-role.kubernetes.io/k3s-node= >/dev/null
 INFO_MSG "$MODULE" "label ${K3sNode} with node"
-sleep 10
+sleep 20
 kubectl get nodes
 SUCCESS_MSG "$MODULE" "############################################################################"
 SUCCESS_MSG "$MODULE" "Success k3s deployment rolled out"

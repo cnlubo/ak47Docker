@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-09 16:56:18
 # LastEditors: cnak47
-# LastEditTime: 2022-09-23 11:43:22
+# LastEditTime: 2022-09-26 10:57:53
 # FilePath: /docker_workspace/ak47Docker/k3s/2-0-deploy-k3s.sh
 # Description:
 #
@@ -67,11 +67,11 @@ fi
 cp "$(pwd)"/k3s.yaml ~/.kube/config
 chmod go-r ~/.kube/config
 kubectl config rename-context default k3s-multipass
-
+sleep 10
 INFO_MSG "$MODULE" "tainting master node: k3s-master"
 # 设置污点默认情况下master节点将不会调度运行Pod
 kubectl taint node k3s-master node-role.kubernetes.io/master=effect:NoSchedule
-sleep 3
+sleep 5
 # worker 设置node 标签
 # 设置Label
 # kubectl label node node1 node-role.kubernetes.io/node=

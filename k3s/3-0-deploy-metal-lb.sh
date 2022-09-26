@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-12 09:40:46
 # LastEditors: cnak47
-# LastEditTime: 2022-09-21 17:59:30
+# LastEditTime: 2022-09-26 11:07:04
 # FilePath: /docker_workspace/ak47Docker/k3s/3-0-deploy-metal-lb.sh
 # Description:
 #
@@ -19,7 +19,7 @@ ScriptPath=$(cd "${parentdir:?}" && pwd)
 # BASH_SOURCE[0] 等价于 BASH_SOURCE,取得当前执行的shell文件所在的路径及文件名
 scriptdir=$(dirname "${BASH_SOURCE[0]}")
 #加载配置内容
-# shellcheck disable=SC1090
+# shellcheck disable=SC1091
 source "$ScriptPath"/include/color.sh
 # shellcheck disable=SC1091
 source "$ScriptPath"/include/common.sh
