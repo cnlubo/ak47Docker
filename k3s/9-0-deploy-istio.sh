@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-09-19 10:00:53
 # LastEditors: cnak47
-# LastEditTime: 2022-09-26 16:10:03
+# LastEditTime: 2022-09-27 11:39:41
 # FilePath: /docker_workspace/ak47Docker/k3s/9-0-deploy-istio.sh
 # Description:
 #
@@ -24,7 +24,25 @@ source "$ScriptPath"/include/color.sh
 # shellcheck disable=SC1091
 source "$ScriptPath"/include/common.sh
 SOURCE_SCRIPT "${scriptdir:?}"/options.conf
-istio_version=$(get_latest_release istio/istio)
-INFO_MSG "$MODULE" "Install istio v${istio_version:?}"
+# istio_version=$(get_latest_release istio/istio)
+INFO_MSG "$MODULE" "Install istioctl v${istio_version:?}"
+if [ ! -d soft/istio/"istio-$istio_version" ]; then
+    cd soft/istio
+    curl -L https://istio.io/downloadIstio | ISTIO_VERSION=$istio_version TARGET_ARCH=x86_64 sh -
+    cd "$scriptdir"
+fi
+if [ ! -d /usr/local/Cellar/istio ]; then
+    mkdir -p /usr/local/Cellar/istio
+fi
+cp soft/istio/istio-"${istio_version:?}"/bin/istioctl /usr/local/Cellar/istio/
+INFO_MSG "$MODULE" "Generate istio install profile"
 
-curl -L https://istio.io/downloadIstio | ISTIO_VERSION=$istio_version TARGET_ARCH=x86_64 sh -
+istioctl manifest generate --set profile=demo \
+    --set .values.global.imagePullPolicy=IfNotPresent >istio-demo.yaml
+INFO_MSG "$MODULE" "Install istio v${istio_version:?}"
+kubectl create namespace istio-system
+kubectl apply -f istio-demo.yaml
+sleep 20
+istioctl version
+# kubectl get svc -n istio-system
+# rm istio-demo.yaml

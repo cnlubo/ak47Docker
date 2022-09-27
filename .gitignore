@@ -25,3 +25,5 @@ certs/
 /k3s/hosts.vm
 k3s/hosts.cleanup.backup
 /k3s/containerd/config.tmpl
+/k3s/istio-demo.yaml
+/k3s/soft/
