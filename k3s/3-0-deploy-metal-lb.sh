@@ -3,14 +3,14 @@
 # Author: cnak47
 # Date: 2022-04-12 09:40:46
 # LastEditors: cnak47
-# LastEditTime: 2022-09-26 11:07:04
+# LastEditTime: 2022-09-29 17:25:10
 # FilePath: /docker_workspace/ak47Docker/k3s/3-0-deploy-metal-lb.sh
 # Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
 ###----------------------------------------------------------------------------
 set -e
-MODULE="$(basename $0)"
+MODULE=$(basename "$0")
 # dirname $0，取得当前执行的脚本文件的父目录
 # cd `dirname $0`，进入这个目录(切换当前工作目录)
 # pwd，显示当前工作目录(cd执行后的)
@@ -37,9 +37,9 @@ fi
 WORKERS=$(echo $(multipass list | grep worker | awk '{print $1}'))
 for WORKER in ${WORKERS}; do
     INFO_MSG "$MODULE" "set Label metallb-speaker on ${WORKER}"
-    kubectl label --overwrite nodes ${WORKER} metallb-speaker=true
+    kubectl label --overwrite nodes "${WORKER}" metallb-speaker=true
 done
-kubectl apply -f addons/metal-lb/$metallb_version/metallb-native.yaml
+kubectl apply -f addons/metal-lb/"$metallb_version"/metallb-native.yaml
 # INFO_MSG "$MODULE" "Create secret memberList"
 # kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 # INFO_MSG "$MODULE" "Create secret memberList"

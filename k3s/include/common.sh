@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-16 23:21:13
 # LastEditors: cnak47
-# LastEditTime: 2022-09-19 11:25:57
+# LastEditTime: 2022-09-29 15:43:08
 # FilePath: /docker_workspace/ak47Docker/k3s/include/common.sh
 # Description:
 #
@@ -58,7 +58,7 @@ SOURCE_SCRIPT() {
 PASS_ENTER_TO_EXIT() {
     InfoMsg="input enter or wait 10s to continue"
     # shellcheck disable=SC2034
-    read -p "$InfoMsg" -t 10 ok
+    read -r -p "$InfoMsg" -t 10 ok
     echo ""
 }
 
@@ -183,3 +183,33 @@ get_latest_release() {
         grep '"tag_name":' |                                          # Get tag line
         sed -E 's/.*"([^"]+)".*/\1/'                                  # Pluck JSON value
 }
+
+# ISTIO_VERSION="$(curl -sL https://github.com/istio/istio/releases | \
+#                   grep -o 'releases/[0-9]*.[0-9]*.[0-9]*/' | sort -V | \
+#                   tail -1 | awk -F'/' '{ print $2}')"
+#   ISTIO_VERSION="${ISTIO_VERSION##*/}"
+
+# get_release_version() {
+#     if [ -n "${INSTALL_K3S_COMMIT}" ]; then
+#         VERSION_K3S="commit ${INSTALL_K3S_COMMIT}"
+#     elif [ -n "${INSTALL_K3S_VERSION}" ]; then
+#         VERSION_K3S=${INSTALL_K3S_VERSION}
+#     else
+#         info "Finding release for channel ${INSTALL_K3S_CHANNEL}"
+#         version_url="${INSTALL_K3S_CHANNEL_URL}/${INSTALL_K3S_CHANNEL}"
+#         case $DOWNLOADER in
+#             curl)
+#                 VERSION_K3S=$(curl -w '%{url_effective}' -L -s -S ${version_url} -o /dev/null | sed -e 's|.*/||')
+#                 ;;
+#             wget)
+#                 VERSION_K3S=$(wget -SqO /dev/null ${version_url} 2>&1 | grep -i Location | sed -e 's|.*/||')
+#                 ;;
+#             *)
+#                 fatal "Incorrect downloader executable '$DOWNLOADER'"
+#                 ;;
+#         esac
+#     fi
+#     info "Using ${VERSION_K3S} as release"
+# }
+
+# cat 1.json | jq '.[]'| jq '.tag_name' |grep -o 'v[0-9]*.[0-9]*.[0-9]*+k3s1'
