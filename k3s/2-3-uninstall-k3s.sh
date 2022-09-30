@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-09 16:56:18
 # LastEditors: cnak47
-# LastEditTime: 2022-09-26 11:21:45
+# LastEditTime: 2022-09-30 11:44:34
 # FilePath: /docker_workspace/ak47Docker/k3s/2-3-uninstall-k3s.sh
 # Description:
 #
