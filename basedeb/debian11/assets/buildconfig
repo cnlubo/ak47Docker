@@ -3,7 +3,7 @@ export DEBIAN_FRONTEND=noninteractive
 TZ=Asia/Shanghai
 gosu_version=1.14
 tini_version='0.19.0'
-yq_version=v4.27.2
+yq_version=v4.27.5
 zlib_version=1.2.12
 sharelib_dir=/usr/local/software/sharelib
 # 0:openssl 1:libressl

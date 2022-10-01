@@ -2,7 +2,7 @@
 # name : cnlubo/basedeb
 ############################################
 ARG from_img_name="debian"
-ARG from_img_tag="11.4-slim"
+ARG from_img_tag="11.5-slim"
 ARG from_img_hash=""
 FROM ${from_img_name}:${from_img_tag}${docker_img_hash}
 ARG debian_version="11.4"
