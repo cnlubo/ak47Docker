@@ -1,0 +1,93 @@
+version: "3.9"
+services:
+  gateway:
+    image: "spacecloudio/gateway:0.21.5"
+    pull_policy: "if_not_present" # other values never, if_not_present
+    restart: "always" # other values no, on-failure
+    environment:
+      - DEV=true # Turn this to false for production mode
+      - CLUSTER_ID=prod-cluster
+      - CONFIG=/config/config.yaml
+      - ADMIN_USER=admin # Log in username
+      - ADMIN_PASS=1234 # Log in password
+      - ADMIN_SECRET=some-secret # Space cloud uses this secret for parsing jwt tokens for config APIs
+      - LOG_LEVEL=debug # other values info, warn
+      - LOG_FORMAT=json # other values text
+      - DISABLE_UI=false
+      - LETSENCRYPT_STORE=local
+      - REDIS_CONN=redis:6379
+      - SSL_ENABLE=false
+      - SSL_CERT=""
+      - SSL_KEY=""
+    volumes:
+      - ./sc-config:/config
+    depends_on:
+      - redis
+      - mysql
+    ports:
+      - "4122:4122"
+
+  redis:
+    image: "redis:6.0"
+
+  debezium:
+    image: "spacecloudio/dbevents:0.2.0"
+    environment:
+      - "SC_ADMIN_SECRET=some-secret"
+      - "GATEWAY_URL=gateway:4122"
+    depends_on:
+      - gateway
+      - mysql
+
+  mysql:
+    image: mysql:8.0.30
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: space-cloud
+      MYSQL_USER: space-cloud
+      MYSQL_PASSWORD: admin1234
+      TZ: Asia/Shanghai
+    command:
+      # 将mysql8.0默认密码策略 修改为 原先 策略 (mysql8.0对其默认策略做了更改 会导致密码无法匹配)
+      --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --explicit_defaults_for_timestamp=true --lower_case_table_names=1
+    volumes:
+      - sc-mysql-data:/var/lib/mysql
+  postgresql14:
+    # 镜像名
+    image: cnlubo/postgresql:14
+    container_name: postgresql14
+    # 重启策略
+    restart: always
+    environment:
+      PG_PASSWORD: 12345678
+      DB_EXTENSION: unaccent,pg_trgm
+      DB_USER: admin
+      DB_PASS: admin123
+      DB_NAME: space-cloud
+    # 映射端口
+    ports:
+       - 5432:5432
+volumes:
+  sc-mysql-data:
+    #   mongo:
+    #     image: "mongo:4.4"
+    #     pull_policy: "if_not_present" # other values never, if_not_present
+    #     restart: "always" # other values no, on-failure
+    #     hostname: mongodb
+    #     environment:
+    #       - MONGO_REPLICA_SET_NAME=rs0
+    #       - MONGO_INITDB_ROOT_USERNAME=root # Log in username
+    #       - MONGO_INITDB_ROOT_PASSWORD=example # Log in password, NOTE: if username or password is changed, change the health check command accordingly
+    #     volumes:
+    #       - sc-mongo-data:/data/db
+    #     healthcheck:
+    #       test: 'test $$(echo "rs.initiate({_id : \"rs0\", members: [ { _id: 0, host: \"mongo:27017\" } ]}).ok || rs.status().ok" | mongo -u root -p example | grep ^1) -eq 1'
+    #       interval: 10s
+    #       start_period: 30s
+    #     command: [ "mongod", "--replSet", "rs0", "--bind_ip", "0.0.0.0" ]
+
+    # volumes:
+    #   sc-mongo-data:
