@@ -3,14 +3,14 @@
 # Author: cnak47
 # Date: 2022-05-09 10:45:56
 # LastEditors: cnak47
-# LastEditTime: 2022-05-18 22:31:10
-# FilePath: /docker_workspace/ak47Docker/k3s/7-1-uninstall-rancher-helm.sh
+# LastEditTime: 2022-10-09 09:48:17
+# FilePath: /docker-workspace/ak47Docker/k3s/7-1-uninstall-rancher-helm.sh
 # Description:
 #
 # Copyright (c) 2022 by cnak47, All Rights Reserved.
 ###----------------------------------------------------------------------------
 # set -e
-MODULE="$(basename $0)"
+MODULE=$(basename "$0")
 # dirname $0，取得当前执行的脚本文件的父目录
 # cd `dirname $0`，进入这个目录(切换当前工作目录)
 # pwd，显示当前工作目录(cd执行后的)
