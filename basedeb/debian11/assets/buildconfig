@@ -4,7 +4,7 @@ TZ=Asia/Shanghai
 gosu_version=1.14
 tini_version='0.19.0'
 yq_version=v4.27.5
-zlib_version=1.2.12
+zlib_version=1.2.13
 sharelib_dir=/usr/local/software/sharelib
 # 0:openssl 1:libressl
 export ssl_version=${ssl_version:-0}

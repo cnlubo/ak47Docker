@@ -4,30 +4,30 @@ services:
   postgresql:
     image: cnlubo/postgresql:14
     environment:
-      - DB_USER=redmine
-      - DB_PASS=password
-      - DB_NAME=redmine_production
+      PG_PASSWORD: 12345678
+      DB_EXTENSION: unaccent,pg_trgm
+      DB_USER: redmine
+      DB_PASS: admin12345678
     volumes:
-      - /Users/ak47/Documents/docker/redmine/postgresql:/var/lib/postgresql
+      - /opt/redmine/postgresql:/var/lib/postgresql
 
   redmine:
     build: ./
-    image: sameersbn/redmine:5.0.2
+    image: sameersbn/redmine:5.0.3-1
     depends_on:
       - postgresql
     environment:
       - TZ=Asia/Shanghai
-
       - DB_ADAPTER=postgresql
       - DB_HOST=postgresql
       - DB_PORT=5432
       - DB_USER=redmine
-      - DB_PASS=password
+      - DB_PASS=admin12345678
       - DB_NAME=redmine_production
 
       - REDMINE_PORT=10083
       - REDMINE_HTTPS=false
-      - REDMINE_RELATIVE_URL_ROOT=
+      - REDMINE_RELATIVE_URL_ROOT=/redmine
       - REDMINE_SECRET_TOKEN=
 
       - REDMINE_SUDO_MODE_ENABLED=false
@@ -60,5 +60,5 @@ services:
     ports:
       - "10083:80"
     volumes:
-      - /Users/ak47/Documents/docker/redmine/redmine:/home/redmine/data
-      - /Users/ak47/Documents/docker/redmine/redmine-logs:/var/log/redmine
+      - /opt/redmine/redmine:/home/redmine/data
+      - /opt/redmine/redmine/redmine-logs:/var/log/redmine

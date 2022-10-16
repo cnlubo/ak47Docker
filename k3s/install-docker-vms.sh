@@ -3,7 +3,7 @@
 # Author: cnak47
 # Date: 2022-04-29 17:02:24
 # LastEditors: cnak47
-# LastEditTime: 2022-09-21 11:32:27
+# LastEditTime: 2022-10-16 10:21:50
 # FilePath: /docker_workspace/ak47Docker/k3s/install-docker-vms.sh
 # Description:
 #
@@ -28,7 +28,7 @@ install_method="manual"
 INFO_MSG "$MODULE" "Create mup-docker VM "
 cpuCount=2
 memCount=4
-diskCount=10
+diskCount=20
 # dockerdata="/Users/ak47/workspace/docker-workspace/dockerdata"
 # if [ ! -d $dockerdata ]; then
 #     mkdir -p $dockerdata
@@ -56,13 +56,13 @@ else
     # https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/
     sleep 10
     # multipass mount $dockerdata mup-docker:"/home/docker" -u 501:0
-    multipass transfer soft/docker/20.10.18_3/*.deb mup-docker:"/home/ubuntu"
+    multipass transfer soft/docker/20.10.19_3/*.deb mup-docker:"/home/ubuntu"
     multipass transfer soft/docker/daemon.json mup-docker:"/home/ubuntu"
     multipass transfer soft/docker/overwrite.conf mup-docker:"/home/ubuntu"
     multipass exec -d "/home/ubuntu" mup-docker -- bash -c 'sudo dpkg -i containerd.io_1.6.8-1_amd64.deb'
-    multipass exec -d "/home/ubuntu" mup-docker -- bash -c 'sudo dpkg -i docker-ce-cli_20.10.18_3-0_ubuntu-focal_amd64.deb'
-    multipass exec -d "/home/ubuntu" mup-docker -- bash -c 'sudo dpkg -i docker-ce_20.10.18_3-0_ubuntu-focal_amd64.deb'
-    multipass exec -d "/home/ubuntu" mup-docker -- bash -c 'sudo dpkg -i docker-compose-plugin_2.6.0_ubuntu-focal_amd64.deb'
+    multipass exec -d "/home/ubuntu" mup-docker -- bash -c 'sudo dpkg -i docker-ce-cli_20.10.19~3-0~ubuntu-focal_amd64.deb'
+    multipass exec -d "/home/ubuntu" mup-docker -- bash -c 'sudo dpkg -i docker-ce_20.10.19~3-0~ubuntu-focal_amd64.deb'
+    multipass exec -d "/home/ubuntu" mup-docker -- bash -c 'sudo dpkg -i docker-compose-plugin_2.6.0~ubuntu-focal_amd64.deb'
     multipass exec -d "/home/ubuntu" mup-docker -- bash -c 'sudo mv daemon.json /etc/docker/ && sudo chmod +0644 /etc/docker/daemon.json'
     multipass exec -d "/home/ubuntu" mup-docker -- bash -c 'sudo mkdir -p /lib/systemd/system/docker.service.d/ && sudo mv overwrite.conf /lib/systemd/system/docker.service.d/ && sudo chmod +0644 /lib/systemd/system/docker.service.d/overwrite.conf'
     multipass exec -d "/home/ubuntu" mup-docker -- bash -c 'sudo systemctl daemon-reload && sudo systemctl restart docker.service'

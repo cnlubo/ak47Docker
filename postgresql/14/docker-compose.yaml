@@ -16,7 +16,7 @@ services:
       DB_NAME: test_db1,test_db2
     # 映射端口
     ports:
-       - 5432:5432
+      - 5432:5432
     volumes:
       # 数据挂载
       - /Users/ak47/Documents/pgdata:/var/lib/postgresql
