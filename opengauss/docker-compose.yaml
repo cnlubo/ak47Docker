@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  opengauss:
+    image: enmotech/opengauss:latest
+    container_name: opengaussdb
+    # restart: no
+    privileged: true
+    user: root
+    environment:
+      GS_PASSWORD: Ak47@123  # openGauss数据库的超级用户omm以及测试用户gaussdb的密码
+      GS_NODENAME: gaussdb   # 数据库节点名称
+      GS_USERNAME: gaussdb   # 数据库连接用户名 默认为gaussdb
+      # GS_PORT:     5432      # 数据库端口
+    ports:
+      - 54329:5432
+    volumes:
+      - /Users/ak47/Documents/opengauss:/var/lib/opengauss
